@@ -1,18 +1,3 @@
----
-title: I Let AI Shop Until My Checkout Lied: Building ReceiptRipper with Passmark
-slug: receiptripper-ai-shops-math-judges-passmark
-tags: breakingappshackathon, passmark, playwright, testing, nextjs
-domain: your-hashnode-domain.hashnode.dev
-subtitle: Passmark drove checkout like a shopper. Decimal math checked whether cart, checkout, email, admin, API, and invoice told the same money truth.
-cover: TODO-upload-article-assets/truth-dashboard.png-to-hashnode-cdn
-enableToc: true
-saveAsDraft: true
----
-
-Publishing note: if you publish through the Hashnode editor, paste the article body and add the tags manually. If you publish from GitHub, replace `domain` and `cover` first. Hashnode's GitHub frontmatter supports up to 5 comma-separated tag slugs, and cover images need to be uploaded to Hashnode CDN first.
-
-# I Let AI Shop Until My Checkout Lied: Building ReceiptRipper with Passmark
-
 Most end-to-end tests ask a simple question:
 
 > Can the user buy something?
@@ -21,21 +6,27 @@ I wanted to ask a more uncomfortable question:
 
 > Did the store tell the same money truth everywhere?
 
-That became ReceiptRipper, a small controlled commerce app plus a Passmark regression gauntlet. Passmark shops through the store like a user. Playwright records the evidence. A deterministic Decimal oracle checks the totals. The app either tells the same truth across product page, cart, checkout, confirmation, email receipt, admin dashboard, API, and invoice, or the report says `DO NOT SHIP`.
+That became **ReceiptRipper**, a controlled local commerce app plus a Passmark regression gauntlet.
 
-The project thesis is:
+Passmark shops through the store like a user. Playwright records the evidence. A deterministic Decimal oracle checks the totals. The app either tells the same truth across product page, cart, checkout, confirmation, email receipt, admin dashboard, API, and invoice, or the report says:
 
-> AI is the shopper. Math is the judge.
+```txt
+DO NOT SHIP
+```
 
-![ReceiptRipper storefront](./article-assets/storefront.png)
+The project thesis is simple:
 
-## Why I built a controlled store
+> **AI is the shopper. Math is the judge.**
+
+![ReceiptRipper storefront](https://raw.githubusercontent.com/ladiesmans217/Breaking-Apps/main/article-assets/storefront.png)
+
+## Why I Built A Controlled Store
 
 For the Breaking Apps Hackathon, the obvious move was to point Passmark at a public demo app and write a suite of natural-language regression tests.
 
 That works, but I wanted a test target where every failure was reproducible. Money bugs are especially good for this because they do not need much explanation. If checkout says one total and the invoice says another, nobody argues that the test is being picky.
 
-So I built `ReceiptRipper Store`, a local Next.js commerce app with exactly the surfaces I wanted to test:
+So I built **ReceiptRipper Store**, a local Next.js commerce app with the exact surfaces I wanted to test:
 
 1. Product grid
 2. Cart
@@ -51,7 +42,7 @@ There is no real payment processor, no SMTP server, no Docker, no Medusa, no Sal
 
 > When checkout claims a total, can every other surface prove it?
 
-## What ReceiptRipper checks
+## What ReceiptRipper Checks
 
 The store uses INR money rules:
 
@@ -75,7 +66,7 @@ shipping = 0 when subtotal >= 2000.00, otherwise 99.00
 total = discountedSubtotal + tax + shipping
 ```
 
-Then the report compares the expected values against every observed source:
+Then the report compares expected values against every observed source:
 
 ```txt
 product page
@@ -92,20 +83,20 @@ A normal browser test might pass because the confirmation page appeared. Receipt
 
 That distinction is the whole project.
 
-## The architecture
+## Architecture
 
 The stack is boring on purpose:
 
 | Layer | What it does |
 | --- | --- |
 | Next.js App Router | Local controlled store, admin, API, invoice, and truth dashboard |
-| Passmark | Drives the checkout flow in plain English through Playwright |
+| Passmark | Drives checkout in plain English through Playwright |
 | OpenRouter | Routes Passmark model calls through the hackathon API key |
-| Playwright | Runs the browser, captures reports, downloads invoices, and calls API endpoints |
+| Playwright | Runs the browser, downloads invoices, captures evidence, and calls APIs |
 | Decimal.js | Computes the source of truth for money |
 | PDFKit | Generates invoice PDFs |
 | pdf-parse | Extracts invoice text during tests |
-| Vitest | Unit tests the money oracle, bug flags, and report scoring |
+| Vitest | Unit tests the oracle, bug flags, and report scoring |
 
 Passmark is the user layer. It reads and acts on the UI like a shopper.
 
@@ -113,9 +104,9 @@ The oracle is the truth layer. It does not ask an AI whether a number looks righ
 
 The reporter is the evidence layer. It writes JSON and HTML reports so a failure is not just "test failed", but a bug card with expected values, observed values, mismatches, and a shipping decision.
 
-## Passmark setup
+## Passmark Setup
 
-The hackathon provides OpenRouter credits, so I configured Passmark to use OpenRouter. I also used snapshot mode instead of OpenAI computer-use mode because I wanted this to stay compatible with the hackathon key and Passmark's normal Playwright flow.
+The hackathon provides OpenRouter credits, so I configured Passmark to use OpenRouter. I also used snapshot mode because I wanted this to stay compatible with the hackathon key and Passmark's normal Playwright flow.
 
 ```ts
 import { configure } from "passmark";
@@ -136,7 +127,7 @@ configure({
 });
 ```
 
-The `.env` file contains:
+My local `.env` contains:
 
 ```txt
 OPENROUTER_API_KEY=sk-or-...
@@ -146,7 +137,7 @@ PASSMARK_LOG_LEVEL=info
 
 The API key is not committed.
 
-## The Passmark checkout test
+## The Passmark Checkout Test
 
 The dedicated AI-driven test is small. It resets the app, asks Passmark to shop the store, then lets the oracle judge the generated order.
 
@@ -190,9 +181,9 @@ await runSteps({
 });
 ```
 
-That is the part Passmark owns. It can find the UI and complete the checkout. Once the order exists, the deterministic report takes over.
+That is the part Passmark owns. It can find the UI and complete checkout. Once the order exists, the deterministic report takes over.
 
-## Local email without real SMTP
+## Local Email Without Real SMTP
 
 Receipt bugs often hide in email. A checkout page can be right while the customer receipt is stale, rounded differently, or missing a discount.
 
@@ -208,7 +199,7 @@ data: {
 
 That let me keep the email flow realistic without adding external infrastructure.
 
-## The seeded bugs
+## Seeded Bugs
 
 The app can run honestly, or it can run with seeded bug flags. The test API resets state before every spec:
 
@@ -240,7 +231,7 @@ These are not random failures. Each bug represents a real commerce class of prob
 
 This is the part I care about most. The suite is not trying to produce 50 shallow checks. It tries to catch a few expensive lies very clearly.
 
-## The Truth Report
+## Truth Report
 
 Every run writes:
 
@@ -278,11 +269,11 @@ Total: INR 2,264.66
 
 The test passes only when every checked source agrees.
 
-## The red report
+## The Red Report
 
 Here is a seeded mutant where the admin order ignores shipping and the invoice is off by one paisa:
 
-![ReceiptRipper red truth report](./article-assets/truth-dashboard.png)
+![ReceiptRipper red truth report](https://raw.githubusercontent.com/ladiesmans217/Breaking-Apps/main/article-assets/truth-dashboard.png)
 
 The report says:
 
@@ -300,13 +291,13 @@ Invoice PDF total expected INR 1,455.94, observed INR 1,455.95
 
 That is the demo moment. The checkout itself can look calm. The report shows where the store lied.
 
-![ReceiptRipper mutant report artifact](./article-assets/mutant-invoice-admin-report.png)
+![ReceiptRipper mutant report artifact](https://raw.githubusercontent.com/ladiesmans217/Breaking-Apps/main/article-assets/mutant-invoice-admin-report.png)
 
-## The tests I shipped
+## Tests I Shipped
 
 I kept the suite small and sharp.
 
-### Unit tests
+### Unit Tests
 
 Vitest covers:
 
@@ -317,7 +308,7 @@ Vitest covers:
 5. Bug-flag behavior
 6. Truth report scoring
 
-### Passmark and Playwright tests
+### Passmark And Playwright Tests
 
 The E2E suite covers:
 
@@ -338,13 +329,13 @@ npm run truth:mutants
 
 `truth:honest` must produce a clean `SHIP` report.
 
-`truth:mutants` must catch the seeded bugs and still exit successfully because the tests expected those mismatches. That was important: a mutant run is green only when ReceiptRipper catches the lie.
+`truth:mutants` must catch the seeded bugs and still exit successfully because the tests expected those mismatches. A mutant run is green only when ReceiptRipper catches the lie.
 
-## The final local run
+## Final Local Run
 
 The full verification command passed:
 
-```txt
+```bash
 npm test
 ```
 
@@ -359,7 +350,7 @@ Mutant truth run: 5 passed
 
 I also ran:
 
-```txt
+```bash
 npm run lint
 npm run typecheck
 npm run build
@@ -367,7 +358,7 @@ npm run build
 
 All passed locally.
 
-## What surprised me
+## What Surprised Me
 
 The biggest lesson was that AI is very useful at the edge of the product, but I do not want it to be the source of truth.
 
@@ -386,9 +377,16 @@ The second lesson was that not all evidence belongs inside Passmark. PDF invoice
 
 The third lesson was cost control. Natural-language tests are not free, even with hackathon credits. I kept one dedicated AI checkout spec, then used deterministic helpers for repeated mutant scenarios. That kept the project reproducible without burning model calls on every small regression check.
 
-## How to run it
+## How To Run It
 
-Clone the repo, install dependencies, and add your OpenRouter key:
+Clone the repo:
+
+```bash
+git clone https://github.com/ladiesmans217/Breaking-Apps.git
+cd Breaking-Apps
+```
+
+Install dependencies:
 
 ```bash
 npm install
@@ -443,7 +441,7 @@ playwright-report/
 test-results/
 ```
 
-## What I would add next
+## What I Would Add Next
 
 The MVP proves the core idea, but the next version could go deeper:
 
@@ -459,7 +457,7 @@ I would still keep the main idea the same:
 
 > Passmark shops. Playwright records. Decimal math judges.
 
-## Final thought
+## Final Thought
 
 This project changed how I think about AI regression testing.
 
@@ -485,4 +483,3 @@ Then it rips the receipt open.
 - Breaking Apps Hackathon page: https://hashnode.com/hackathons/breaking-things
 - Playwright docs: https://playwright.dev/docs/intro
 - Next.js installation docs: https://nextjs.org/docs/app/getting-started/installation
-- Hashnode GitHub frontmatter docs: https://docs.hashnode.com/blogs/blog-dashboard/github/frontmatter-breakdown

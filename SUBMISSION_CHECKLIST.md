@@ -7,12 +7,13 @@ Deadline note: the published hackathon deadline is May 10, 2026 at 11:59 PM PT, 
 - Do not paste or commit the OpenRouter API key. `.env` is already ignored.
 - Star and fork `bug0inc/passmark`.
 - GitHub repo: https://github.com/ladiesmans217/Breaking-Apps
-- Replace `your-hashnode-domain.hashnode.dev` in `ARTICLE_DRAFT.md` if publishing from GitHub.
 - Upload `article-assets/truth-dashboard.png` to Hashnode CDN and use that URL as the cover.
 - Upload or paste these screenshots into the article:
   - `article-assets/storefront.png`
   - `article-assets/truth-dashboard.png`
   - `article-assets/mutant-invoice-admin-report.png`
+- For Hashnode editor copy-paste, use `ARTICLE_DRAFT.md` only. It has no YAML frontmatter.
+- Put the title, subtitle, and tags from `HASHNODE_COPY_PASTE.md` into the Hashnode metadata fields.
 - Add the Hashnode tag `#BreakingAppsHackathon`.
 - Keep tags to 5 if using GitHub frontmatter:
   - `breakingappshackathon`
