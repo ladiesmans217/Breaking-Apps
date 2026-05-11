@@ -1,0 +1,173 @@
+{
+  "runId": "tr_1778463118344",
+  "orderId": "rr_20260511_001",
+  "mode": "mutant",
+  "scenario": "mutant-tax-rounding",
+  "decision": "DO NOT SHIP",
+  "truthScore": 94,
+  "checkedAt": "2026-05-11T01:31:58.344Z",
+  "expected": {
+    "subtotal": "1149.95",
+    "discount": "0.00",
+    "tax": "206.99",
+    "shipping": "99.00",
+    "total": "1455.94"
+  },
+  "sources": [
+    {
+      "source": "product",
+      "label": "Product page",
+      "observed": {
+        "subtotal": "1149.95",
+        "discount": "0.00",
+        "tax": "206.99",
+        "shipping": "99.00",
+        "total": "1455.94"
+      },
+      "fields": [
+        "subtotal"
+      ]
+    },
+    {
+      "source": "cart",
+      "label": "Cart",
+      "observed": {
+        "subtotal": "1149.95",
+        "discount": "0.00",
+        "tax": "206.99",
+        "shipping": "99.00",
+        "total": "1455.94"
+      },
+      "fields": [
+        "subtotal",
+        "discount",
+        "tax",
+        "shipping",
+        "total"
+      ]
+    },
+    {
+      "source": "checkout",
+      "label": "Checkout",
+      "observed": {
+        "subtotal": "1149.95",
+        "discount": "0.00",
+        "tax": "207.00",
+        "shipping": "99.00",
+        "total": "1455.95"
+      },
+      "fields": [
+        "subtotal",
+        "discount",
+        "tax",
+        "shipping",
+        "total"
+      ]
+    },
+    {
+      "source": "confirmation",
+      "label": "Confirmation page",
+      "observed": {
+        "subtotal": "1149.95",
+        "discount": "0.00",
+        "tax": "206.99",
+        "shipping": "99.00",
+        "total": "1455.94"
+      },
+      "fields": [
+        "total"
+      ]
+    },
+    {
+      "source": "email",
+      "label": "Email receipt",
+      "observed": {
+        "subtotal": "1149.95",
+        "discount": "0.00",
+        "tax": "206.99",
+        "shipping": "99.00",
+        "total": "1455.94"
+      },
+      "fields": [
+        "subtotal",
+        "discount",
+        "tax",
+        "shipping",
+        "total"
+      ]
+    },
+    {
+      "source": "admin",
+      "label": "Admin order",
+      "observed": {
+        "subtotal": "1149.95",
+        "discount": "0.00",
+        "tax": "206.99",
+        "shipping": "99.00",
+        "total": "1455.94"
+      },
+      "fields": [
+        "subtotal",
+        "discount",
+        "tax",
+        "shipping",
+        "total"
+      ]
+    },
+    {
+      "source": "api",
+      "label": "Order API",
+      "observed": {
+        "subtotal": "1149.95",
+        "discount": "0.00",
+        "tax": "206.99",
+        "shipping": "99.00",
+        "total": "1455.94"
+      },
+      "fields": [
+        "subtotal",
+        "discount",
+        "tax",
+        "shipping",
+        "total"
+      ]
+    },
+    {
+      "source": "invoice",
+      "label": "Invoice PDF",
+      "observed": {
+        "subtotal": "1149.95",
+        "discount": "0.00",
+        "tax": "206.99",
+        "shipping": "99.00",
+        "total": "1455.94"
+      },
+      "fields": [
+        "subtotal",
+        "discount",
+        "tax",
+        "shipping",
+        "total"
+      ]
+    }
+  ],
+  "mismatches": [
+    {
+      "source": "checkout",
+      "label": "Checkout",
+      "field": "tax",
+      "expected": "206.99",
+      "observed": "207.00"
+    },
+    {
+      "source": "checkout",
+      "label": "Checkout",
+      "field": "total",
+      "expected": "1455.94",
+      "observed": "1455.95"
+    }
+  ],
+  "evidence": {
+    "invoiceText": "ReceiptRipper Invoice\nOrder: rr_20260511_001\nCustomer: Ada Lovelace\nEmail: mutant-rounding@receiptripper.test\nSubtotal: ₹1,149.95\nDiscount: ₹0.00\nTax: ₹206.99\nShipping: ₹99.00\nTotal: ₹1,455.94"
+  }
+}

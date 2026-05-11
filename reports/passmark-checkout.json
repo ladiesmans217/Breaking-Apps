@@ -1,0 +1,158 @@
+{
+  "runId": "tr_1778463090939",
+  "orderId": "rr_20260511_001",
+  "mode": "honest",
+  "scenario": "passmark-checkout",
+  "decision": "SHIP",
+  "truthScore": 100,
+  "checkedAt": "2026-05-11T01:31:30.939Z",
+  "expected": {
+    "subtotal": "2399.00",
+    "discount": "479.80",
+    "tax": "345.46",
+    "shipping": "0.00",
+    "total": "2264.66"
+  },
+  "sources": [
+    {
+      "source": "product",
+      "label": "Product page",
+      "observed": {
+        "subtotal": "2399.00",
+        "discount": "479.80",
+        "tax": "345.46",
+        "shipping": "0.00",
+        "total": "2264.66"
+      },
+      "fields": [
+        "subtotal"
+      ]
+    },
+    {
+      "source": "cart",
+      "label": "Cart",
+      "observed": {
+        "subtotal": "2399.00",
+        "discount": "479.80",
+        "tax": "345.46",
+        "shipping": "0.00",
+        "total": "2264.66"
+      },
+      "fields": [
+        "subtotal",
+        "discount",
+        "tax",
+        "shipping",
+        "total"
+      ]
+    },
+    {
+      "source": "checkout",
+      "label": "Checkout",
+      "observed": {
+        "subtotal": "2399.00",
+        "discount": "479.80",
+        "tax": "345.46",
+        "shipping": "0.00",
+        "total": "2264.66"
+      },
+      "fields": [
+        "subtotal",
+        "discount",
+        "tax",
+        "shipping",
+        "total"
+      ]
+    },
+    {
+      "source": "confirmation",
+      "label": "Confirmation page",
+      "observed": {
+        "subtotal": "2399.00",
+        "discount": "479.80",
+        "tax": "345.46",
+        "shipping": "0.00",
+        "total": "2264.66"
+      },
+      "fields": [
+        "total"
+      ]
+    },
+    {
+      "source": "email",
+      "label": "Email receipt",
+      "observed": {
+        "subtotal": "2399.00",
+        "discount": "479.80",
+        "tax": "345.46",
+        "shipping": "0.00",
+        "total": "2264.66"
+      },
+      "fields": [
+        "subtotal",
+        "discount",
+        "tax",
+        "shipping",
+        "total"
+      ]
+    },
+    {
+      "source": "admin",
+      "label": "Admin order",
+      "observed": {
+        "subtotal": "2399.00",
+        "discount": "479.80",
+        "tax": "345.46",
+        "shipping": "0.00",
+        "total": "2264.66"
+      },
+      "fields": [
+        "subtotal",
+        "discount",
+        "tax",
+        "shipping",
+        "total"
+      ]
+    },
+    {
+      "source": "api",
+      "label": "Order API",
+      "observed": {
+        "subtotal": "2399.00",
+        "discount": "479.80",
+        "tax": "345.46",
+        "shipping": "0.00",
+        "total": "2264.66"
+      },
+      "fields": [
+        "subtotal",
+        "discount",
+        "tax",
+        "shipping",
+        "total"
+      ]
+    },
+    {
+      "source": "invoice",
+      "label": "Invoice PDF",
+      "observed": {
+        "subtotal": "2399.00",
+        "discount": "479.80",
+        "tax": "345.46",
+        "shipping": "0.00",
+        "total": "2264.66"
+      },
+      "fields": [
+        "subtotal",
+        "discount",
+        "tax",
+        "shipping",
+        "total"
+      ]
+    }
+  ],
+  "mismatches": [],
+  "evidence": {
+    "invoiceText": "ReceiptRipper Invoice\nOrder: rr_20260511_001\nCustomer: Ada Lovelace\nEmail: passmark-shopper@receiptripper.test\nSubtotal: ₹2,399.00\nDiscount: ₹479.80\nTax: ₹345.46\nShipping: ₹0.00\nTotal: ₹2,264.66"
+  }
+}

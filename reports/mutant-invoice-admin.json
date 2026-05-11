@@ -1,0 +1,180 @@
+{
+  "runId": "tr_1778463130599",
+  "orderId": "rr_20260511_001",
+  "mode": "mutant",
+  "scenario": "mutant-invoice-admin",
+  "decision": "DO NOT SHIP",
+  "truthScore": 91,
+  "checkedAt": "2026-05-11T01:32:10.599Z",
+  "expected": {
+    "subtotal": "1149.95",
+    "discount": "0.00",
+    "tax": "206.99",
+    "shipping": "99.00",
+    "total": "1455.94"
+  },
+  "sources": [
+    {
+      "source": "product",
+      "label": "Product page",
+      "observed": {
+        "subtotal": "1149.95",
+        "discount": "0.00",
+        "tax": "206.99",
+        "shipping": "99.00",
+        "total": "1455.94"
+      },
+      "fields": [
+        "subtotal"
+      ]
+    },
+    {
+      "source": "cart",
+      "label": "Cart",
+      "observed": {
+        "subtotal": "1149.95",
+        "discount": "0.00",
+        "tax": "206.99",
+        "shipping": "99.00",
+        "total": "1455.94"
+      },
+      "fields": [
+        "subtotal",
+        "discount",
+        "tax",
+        "shipping",
+        "total"
+      ]
+    },
+    {
+      "source": "checkout",
+      "label": "Checkout",
+      "observed": {
+        "subtotal": "1149.95",
+        "discount": "0.00",
+        "tax": "206.99",
+        "shipping": "99.00",
+        "total": "1455.94"
+      },
+      "fields": [
+        "subtotal",
+        "discount",
+        "tax",
+        "shipping",
+        "total"
+      ]
+    },
+    {
+      "source": "confirmation",
+      "label": "Confirmation page",
+      "observed": {
+        "subtotal": "1149.95",
+        "discount": "0.00",
+        "tax": "206.99",
+        "shipping": "99.00",
+        "total": "1455.94"
+      },
+      "fields": [
+        "total"
+      ]
+    },
+    {
+      "source": "email",
+      "label": "Email receipt",
+      "observed": {
+        "subtotal": "1149.95",
+        "discount": "0.00",
+        "tax": "206.99",
+        "shipping": "99.00",
+        "total": "1455.94"
+      },
+      "fields": [
+        "subtotal",
+        "discount",
+        "tax",
+        "shipping",
+        "total"
+      ]
+    },
+    {
+      "source": "admin",
+      "label": "Admin order",
+      "observed": {
+        "subtotal": "1149.95",
+        "discount": "0.00",
+        "tax": "206.99",
+        "shipping": "0.00",
+        "total": "1356.94"
+      },
+      "fields": [
+        "subtotal",
+        "discount",
+        "tax",
+        "shipping",
+        "total"
+      ]
+    },
+    {
+      "source": "api",
+      "label": "Order API",
+      "observed": {
+        "subtotal": "1149.95",
+        "discount": "0.00",
+        "tax": "206.99",
+        "shipping": "99.00",
+        "total": "1455.94"
+      },
+      "fields": [
+        "subtotal",
+        "discount",
+        "tax",
+        "shipping",
+        "total"
+      ]
+    },
+    {
+      "source": "invoice",
+      "label": "Invoice PDF",
+      "observed": {
+        "subtotal": "1149.95",
+        "discount": "0.00",
+        "tax": "206.99",
+        "shipping": "99.00",
+        "total": "1455.95"
+      },
+      "fields": [
+        "subtotal",
+        "discount",
+        "tax",
+        "shipping",
+        "total"
+      ]
+    }
+  ],
+  "mismatches": [
+    {
+      "source": "admin",
+      "label": "Admin order",
+      "field": "shipping",
+      "expected": "99.00",
+      "observed": "0.00"
+    },
+    {
+      "source": "admin",
+      "label": "Admin order",
+      "field": "total",
+      "expected": "1455.94",
+      "observed": "1356.94"
+    },
+    {
+      "source": "invoice",
+      "label": "Invoice PDF",
+      "field": "total",
+      "expected": "1455.94",
+      "observed": "1455.95"
+    }
+  ],
+  "evidence": {
+    "invoiceText": "ReceiptRipper Invoice\nOrder: rr_20260511_001\nCustomer: Ada Lovelace\nEmail: mutant-invoice-admin@receiptripper.test\n1 x Precision Mat (RR-MAT-003)\nUnit: ¹999.99 Line: ¹999.99\n1 x Copper Cable (RR-CABLE-004)\nUnit: ¹149.95 Line: ¹149.95\n1 x One Paisa Washer (RR-WASHER-005)\nUnit: ¹0.01 Line: ¹0.01\nReceiptRipper Invoice\nOrder: rr_20260511_001\nCustomer: Ada Lovelace\nEmail: mutant-invoice-admin@receiptripper.test\nSubtotal: ¹1,149.95\nDiscount: ¹0.00\nTax: ¹206.99\nShipping: ¹99.00\nTotal: ¹1,455.95\n\n-- 1 of 1 --\n\n"
+  }
+}

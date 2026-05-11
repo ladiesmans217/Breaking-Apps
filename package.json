@@ -1,0 +1,52 @@
+{
+  "name": "receiptripper",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Passmark-powered checkout truth gauntlet: AI shops, math judges.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test:unit": "vitest run",
+    "test:e2e": "playwright test tests/e2e",
+    "test:passmark": "playwright test tests/e2e --grep @passmark",
+    "truth:honest": "playwright test tests/e2e --grep @honest",
+    "truth:mutants": "playwright test tests/e2e --grep @mutant",
+    "test": "npm run test:unit && npm run test:passmark && npm run truth:honest && npm run truth:mutants",
+    "report": "playwright show-report"
+  },
+  "dependencies": {
+    "@tailwindcss/postcss": "4.3.0",
+    "clsx": "2.1.1",
+    "decimal.js": "10.6.0",
+    "dotenv": "17.4.2",
+    "lucide-react": "1.14.0",
+    "next": "16.2.6",
+    "passmark": "1.0.13",
+    "pdfkit": "0.18.0",
+    "react": "19.2.6",
+    "react-dom": "19.2.6",
+    "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.59.1",
+    "@types/node": "22.19.18",
+    "@types/pdfkit": "0.17.6",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "@eslint/js": "10.0.1",
+    "eslint": "10.3.0",
+    "pdf-parse": "2.4.5",
+    "prettier": "3.8.3",
+    "start-server-and-test": "3.0.4",
+    "tailwindcss": "4.3.0",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.59.2",
+    "vitest": "4.1.5"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  }
+}

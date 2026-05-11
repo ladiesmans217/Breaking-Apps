@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+
+# Next.js
+.next/
+out/
+
+# Local secrets
+.env
+.env.*
+!.env.example
+
+# Test and coverage output
+playwright-report/
+test-results/
+coverage/
+
+# Local logs and generated metadata
+*.log
+dev-server.*.log
+tsconfig.tsbuildinfo
+
+# Heavy generated evidence.
+# Keep reports/*.html and scenario reports/*.json committed for the demo.
+reports/playwright-results.json
+reports/screenshots/
+reports/traces/
+reports/invoices/

@@ -1,0 +1,187 @@
+{
+  "runId": "tr_1778463120090",
+  "orderId": "rr_20260511_001",
+  "mode": "mutant",
+  "scenario": "mutant-threshold",
+  "decision": "DO NOT SHIP",
+  "truthScore": 88,
+  "checkedAt": "2026-05-11T01:32:00.090Z",
+  "expected": {
+    "subtotal": "1999.99",
+    "discount": "0.00",
+    "tax": "360.00",
+    "shipping": "99.00",
+    "total": "2458.99"
+  },
+  "sources": [
+    {
+      "source": "product",
+      "label": "Product page",
+      "observed": {
+        "subtotal": "1999.99",
+        "discount": "0.00",
+        "tax": "360.00",
+        "shipping": "99.00",
+        "total": "2458.99"
+      },
+      "fields": [
+        "subtotal"
+      ]
+    },
+    {
+      "source": "cart",
+      "label": "Cart",
+      "observed": {
+        "subtotal": "1999.99",
+        "discount": "0.00",
+        "tax": "360.00",
+        "shipping": "0.00",
+        "total": "2359.99"
+      },
+      "fields": [
+        "subtotal",
+        "discount",
+        "tax",
+        "shipping",
+        "total"
+      ]
+    },
+    {
+      "source": "checkout",
+      "label": "Checkout",
+      "observed": {
+        "subtotal": "1999.99",
+        "discount": "0.00",
+        "tax": "360.00",
+        "shipping": "0.00",
+        "total": "2359.99"
+      },
+      "fields": [
+        "subtotal",
+        "discount",
+        "tax",
+        "shipping",
+        "total"
+      ]
+    },
+    {
+      "source": "confirmation",
+      "label": "Confirmation page",
+      "observed": {
+        "subtotal": "1999.99",
+        "discount": "0.00",
+        "tax": "360.00",
+        "shipping": "99.00",
+        "total": "2458.99"
+      },
+      "fields": [
+        "total"
+      ]
+    },
+    {
+      "source": "email",
+      "label": "Email receipt",
+      "observed": {
+        "subtotal": "1999.99",
+        "discount": "0.00",
+        "tax": "360.00",
+        "shipping": "99.00",
+        "total": "2458.99"
+      },
+      "fields": [
+        "subtotal",
+        "discount",
+        "tax",
+        "shipping",
+        "total"
+      ]
+    },
+    {
+      "source": "admin",
+      "label": "Admin order",
+      "observed": {
+        "subtotal": "1999.99",
+        "discount": "0.00",
+        "tax": "360.00",
+        "shipping": "99.00",
+        "total": "2458.99"
+      },
+      "fields": [
+        "subtotal",
+        "discount",
+        "tax",
+        "shipping",
+        "total"
+      ]
+    },
+    {
+      "source": "api",
+      "label": "Order API",
+      "observed": {
+        "subtotal": "1999.99",
+        "discount": "0.00",
+        "tax": "360.00",
+        "shipping": "99.00",
+        "total": "2458.99"
+      },
+      "fields": [
+        "subtotal",
+        "discount",
+        "tax",
+        "shipping",
+        "total"
+      ]
+    },
+    {
+      "source": "invoice",
+      "label": "Invoice PDF",
+      "observed": {
+        "subtotal": "1999.99",
+        "discount": "0.00",
+        "tax": "360.00",
+        "shipping": "99.00",
+        "total": "2458.99"
+      },
+      "fields": [
+        "subtotal",
+        "discount",
+        "tax",
+        "shipping",
+        "total"
+      ]
+    }
+  ],
+  "mismatches": [
+    {
+      "source": "cart",
+      "label": "Cart",
+      "field": "shipping",
+      "expected": "99.00",
+      "observed": "0.00"
+    },
+    {
+      "source": "cart",
+      "label": "Cart",
+      "field": "total",
+      "expected": "2458.99",
+      "observed": "2359.99"
+    },
+    {
+      "source": "checkout",
+      "label": "Checkout",
+      "field": "shipping",
+      "expected": "99.00",
+      "observed": "0.00"
+    },
+    {
+      "source": "checkout",
+      "label": "Checkout",
+      "field": "total",
+      "expected": "2458.99",
+      "observed": "2359.99"
+    }
+  ],
+  "evidence": {
+    "invoiceText": "ReceiptRipper Invoice\nOrder: rr_20260511_001\nCustomer: Ada Lovelace\nEmail: mutant-threshold@receiptripper.test\nSubtotal: ₹1,999.99\nDiscount: ₹0.00\nTax: ₹360.00\nShipping: ₹99.00\nTotal: ₹2,458.99"
+  }
+}

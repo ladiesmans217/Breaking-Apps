@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ReceiptRipper Truth Report</title>
+  <style>
+    body { font-family: Inter, Arial, sans-serif; margin: 40px; color: #121212; }
+    .decision { font-size: 44px; font-weight: 800; margin: 0; }
+    .bad { color: #b91c1c; }
+    .good { color: #047857; }
+    table { border-collapse: collapse; width: 100%; margin-top: 24px; }
+    th, td { border-bottom: 1px solid #ddd; padding: 10px; text-align: left; }
+    th { background: #f3f4f6; }
+  </style>
+</head>
+<body>
+  <p>RECEIPTRIPPER TRUTH REPORT</p>
+  <h1 class="decision bad">DO NOT SHIP</h1>
+  <p>Truth score: 88% · Order: rr_20260511_001 · Scenario: mutant-threshold</p>
+  <table>
+    <thead><tr><th>Source</th><th>Subtotal</th><th>Discount</th><th>Tax</th><th>Shipping</th><th>Total</th></tr></thead>
+    <tbody>
+        <tr>
+          <td>Product page</td>
+          <td>₹1,999.99</td>
+          <td>₹0.00</td>
+          <td>₹360.00</td>
+          <td>₹99.00</td>
+          <td>₹2,458.99</td>
+        </tr>
+        <tr>
+          <td>Cart</td>
+          <td>₹1,999.99</td>
+          <td>₹0.00</td>
+          <td>₹360.00</td>
+          <td>₹0.00</td>
+          <td>₹2,359.99</td>
+        </tr>
+        <tr>
+          <td>Checkout</td>
+          <td>₹1,999.99</td>
+          <td>₹0.00</td>
+          <td>₹360.00</td>
+          <td>₹0.00</td>
+          <td>₹2,359.99</td>
+        </tr>
+        <tr>
+          <td>Confirmation page</td>
+          <td>₹1,999.99</td>
+          <td>₹0.00</td>
+          <td>₹360.00</td>
+          <td>₹99.00</td>
+          <td>₹2,458.99</td>
+        </tr>
+        <tr>
+          <td>Email receipt</td>
+          <td>₹1,999.99</td>
+          <td>₹0.00</td>
+          <td>₹360.00</td>
+          <td>₹99.00</td>
+          <td>₹2,458.99</td>
+        </tr>
+        <tr>
+          <td>Admin order</td>
+          <td>₹1,999.99</td>
+          <td>₹0.00</td>
+          <td>₹360.00</td>
+          <td>₹99.00</td>
+          <td>₹2,458.99</td>
+        </tr>
+        <tr>
+          <td>Order API</td>
+          <td>₹1,999.99</td>
+          <td>₹0.00</td>
+          <td>₹360.00</td>
+          <td>₹99.00</td>
+          <td>₹2,458.99</td>
+        </tr>
+        <tr>
+          <td>Invoice PDF</td>
+          <td>₹1,999.99</td>
+          <td>₹0.00</td>
+          <td>₹360.00</td>
+          <td>₹99.00</td>
+          <td>₹2,458.99</td>
+        </tr></tbody>
+  </table>
+  <h2>Mismatches</h2>
+  <ul><li>Cart shipping: expected ₹99.00, observed ₹0.00</li><li>Cart total: expected ₹2,458.99, observed ₹2,359.99</li><li>Checkout shipping: expected ₹99.00, observed ₹0.00</li><li>Checkout total: expected ₹2,458.99, observed ₹2,359.99</li></ul>
+</body>
+</html>
