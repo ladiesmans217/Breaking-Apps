@@ -1,15 +1,15 @@
 Title:
 
-I Let AI Shop Until Checkout Lied: Building ReceiptRipper with Passmark
+AI Shopped My Store. Math Decided If It Could Ship: Building ReceiptRipper with Passmark
 
 Subtitle:
 
-Passmark completed checkout like a real shopper. A Decimal oracle compared cart, checkout, email, admin, API, and invoice totals, then generated a red DO NOT SHIP report when money drifted by even ₹0.01.
+Passmark completed checkout like a real shopper. A Decimal oracle compared product page, cart, checkout, email, admin, API, invoice, locale, and inventory truth, then generated a DO NOT SHIP report when money drifted by even ₹0.01.
 
 Tags:
 
-BreakingAppsHackathon, Passmark, Playwright, Testing, Nextjs
+breakingappshackathon, passmark, playwright, testing, nextjs
 
 Body:
 
-Copy the body from `ARTICLE_DRAFT.md`. Do not paste this metadata block into Hashnode's article body.
+Copy the full body from `ARTICLE_DRAFT.md`. It is body-only and already contains public GitHub image URLs, so you can paste it into Hashnode directly.

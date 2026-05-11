@@ -1,99 +1,18 @@
-Most end-to-end tests ask a simple question:
+A checkout flow can pass and still lie.
 
-> Can the user buy something?
+The button can work. The order page can load. The invoice can download. The email can arrive. Every normal end-to-end assertion can look green.
 
-I wanted to ask a more uncomfortable question:
+And still, somewhere in the system, the customer paid ₹1,455.94 while the admin screen says ₹1,356.94 and the invoice says ₹1,455.95.
 
-> Did the store tell the same money truth everywhere?
+That is the bug class I wanted to catch for **#breakingappshackathon**.
 
-That became **ReceiptRipper**, a controlled local commerce app plus a Passmark regression gauntlet.
+So I built **ReceiptRipper**: a controlled commerce app plus a Passmark regression gauntlet for checkout truth.
 
-Passmark shops through the store like a user. Playwright records the evidence. A deterministic Decimal oracle checks the totals. The app either tells the same truth across product page, cart, checkout, confirmation, email receipt, admin dashboard, API, and invoice, or the report says:
-
-```txt
-DO NOT SHIP
-```
-
-The project thesis is simple:
+The thesis:
 
 > **AI is the shopper. Math is the judge.**
 
-I built this for **#BreakingAppsHackathon** by Hashnode and Bug0, using Passmark as the AI regression layer and OpenRouter for the hackathon-provided model gateway.
-
-Here is the short version:
-
-```txt
-Target: A controlled Next.js commerce store
-AI layer: Passmark with OpenRouter
-Truth layer: Decimal.js money oracle
-Evidence: Playwright traces, API reads, email extraction, invoice PDF parsing, HTML reports
-Honest run: SHIP, 100% truth score
-Mutant run: DO NOT SHIP, seeded checkout lies caught
-```
-
-What you will find below:
-
-1. Why I built a controlled store instead of another generic website scanner
-2. How I made Passmark act as the shopper, not the judge
-3. The exact money invariant behind the project
-4. The seeded bugs ReceiptRipper catches
-5. The final test results and what I learned about AI regression testing
-
-![ReceiptRipper storefront](https://raw.githubusercontent.com/ladiesmans217/Breaking-Apps/main/article-assets/storefront.png)
-
-## Why I Built A Controlled Store
-
-For the Breaking Apps Hackathon, the obvious move was to point Passmark at a public demo app and write a suite of natural-language regression tests.
-
-That works, but I wanted a test target where every failure was reproducible. Money bugs are especially good for this because they do not need much explanation. If checkout says one total and the invoice says another, nobody argues that the test is being picky.
-
-That was the gap I wanted to attack. Not "does the page render?" Not "is the button visible?" Not "can an AI click around?"
-
-The question was sharper:
-
-> Can the store prove the same total across every place a customer or operator would see it?
-
-So I built **ReceiptRipper Store**, a local Next.js commerce app with the exact surfaces I wanted to test:
-
-1. Product grid
-2. Cart
-3. Checkout
-4. Confirmation page
-5. Email receipt
-6. Admin order page
-7. Order API
-8. Invoice PDF
-9. Truth report dashboard
-
-There is no real payment processor, no SMTP server, no Docker, no Medusa, no Saleor, and no database in the MVP. That was intentional. The point was not to recreate all of commerce. The point was to create a clean lab for one question:
-
-> When checkout claims a total, can every other surface prove it?
-
-## What ReceiptRipper Checks
-
-The store uses INR money rules:
-
-```txt
-Coupon: SAVE20 gives 20% off
-Tax: 18%
-Shipping: INR 99.00
-Free shipping threshold: INR 2,000.00
-Currency: INR
-Rounding: exact Decimal math, rounded to 2 decimal places at the boundary
-```
-
-The oracle computes:
-
-```txt
-subtotal = sum(line totals)
-discount = subtotal * 0.20 when coupon is SAVE20
-discountedSubtotal = subtotal - discount
-tax = discountedSubtotal * 0.18
-shipping = 0 when subtotal >= 2000.00, otherwise 99.00
-total = discountedSubtotal + tax + shipping
-```
-
-Then the report compares expected values against every observed source:
+Passmark drives the app like a user. Playwright records the evidence. Redis caches Passmark steps. A Decimal.js oracle computes the expected money truth. ReceiptRipper then compares every place the store makes a money claim:
 
 ```txt
 product page
@@ -104,40 +23,242 @@ email receipt
 admin order
 order API
 invoice PDF
+localized UI text
+inventory state
 ```
 
-A normal browser test might pass because the confirmation page appeared. ReceiptRipper can still fail because the email receipt, invoice, or admin view disagreed with the math.
+If they agree, the report says:
 
-That distinction is the whole project.
+```txt
+SHIP
+```
 
-## Architecture
+If they disagree, the report says:
 
-The stack is boring on purpose:
+```txt
+DO NOT SHIP
+```
 
-| Layer | What it does |
+![ReceiptRipper aggregate truth report](https://raw.githubusercontent.com/ladiesmans217/Breaking-Apps/main/article-assets/full-aggregate-report.png)
+
+## The Short Version
+
+ReceiptRipper is not a generic AI QA dashboard.
+
+It is a domain-specific truth test:
+
+> A store must not tell different money stories in different places.
+
+The final local run passed:
+
+```txt
+Vitest unit tests: 12 passed
+Real Passmark checkout test: 1 passed
+Honest truth run: 1 passed
+Mutant truth run: 7 passed
+Full original truth run: 5 passed
+Redis-backed test:full run: passed
+```
+
+The full gauntlet covers:
+
+1. Product page to cart truth
+2. Coupon truth
+3. Tax rounding truth
+4. Free-shipping threshold truth at ₹1,999.99, ₹2,000.00, and ₹2,000.01
+5. Locale and currency parsing across `en-IN`, `en-US`, `en-GB`, `de-DE`, and `fr-FR`
+6. Inventory race protection for a last-stock item
+7. Email receipt truth using a local Passmark email provider
+8. Invoice, admin, and API truth using PDF text extraction and direct API reads
+
+That is the entire project in one sentence:
+
+> Passmark shops. Playwright records. Redis caches. Decimal math judges. ReceiptRipper refuses to ship lies.
+
+## Why I Built A Controlled Store
+
+For this hackathon, the obvious path was to point Passmark at an existing public app and write plain-English tests.
+
+That is useful, but I wanted a stronger demo.
+
+Most web testing articles stop at:
+
+```txt
+The page rendered.
+The button worked.
+The user reached checkout.
+```
+
+ReceiptRipper asks a nastier question:
+
+```txt
+Did checkout tell the same truth everywhere?
+```
+
+That meant I needed a target where every surface was visible, deterministic, and reproducible. So I built a controlled local commerce app with:
+
+1. Product grid
+2. Cart
+3. Checkout review page
+4. Confirmation page
+5. Email receipt
+6. Admin order page
+7. Order API
+8. Invoice PDF
+9. Truth report dashboard
+
+No real payment provider. No real SMTP. No Medusa. No Saleor. No fake production story.
+
+Just a small store designed to expose the places where commerce systems drift.
+
+![ReceiptRipper storefront](https://raw.githubusercontent.com/ladiesmans217/Breaking-Apps/main/article-assets/storefront.png)
+
+## The Bug That Makes The Demo Click
+
+Here is a real seeded mutant from the suite:
+
+```txt
+Expected total:        ₹1,455.94
+Admin order total:     ₹1,356.94
+Invoice PDF total:     ₹1,455.95
+Order API total:       ₹1,455.94
+```
+
+The API is right. The customer-facing confirmation is right. But admin ignored shipping and the invoice drifted by one paisa.
+
+A shallow test would probably pass because checkout completed.
+
+ReceiptRipper fails the run because the store told three different money stories.
+
+![ReceiptRipper mutant invoice and admin report](https://raw.githubusercontent.com/ladiesmans217/Breaking-Apps/main/article-assets/mutant-invoice-admin-report.png)
+
+That is why this project is not about “AI clicked buttons.”
+
+It is about using AI to reach the same surfaces a user would reach, then using deterministic code to decide whether those surfaces are telling the truth.
+
+## The Architecture
+
+The architecture has four layers:
+
+| Layer | Responsibility |
 | --- | --- |
-| Next.js App Router | Local controlled store, admin, API, invoice, and truth dashboard |
-| Passmark | Drives checkout in plain English through Playwright |
-| OpenRouter | Routes Passmark model calls through the hackathon API key |
-| Playwright | Runs the browser, downloads invoices, captures evidence, and calls APIs |
-| Decimal.js | Computes the source of truth for money |
-| PDFKit | Generates invoice PDFs |
-| pdf-parse | Extracts invoice text during tests |
-| Vitest | Unit tests the oracle, bug flags, and report scoring |
+| Passmark | Acts like the shopper through natural-language browser steps |
+| Playwright | Runs the browser, captures screenshots/videos/traces, downloads invoices, calls APIs |
+| Decimal oracle | Computes the expected subtotal, discount, tax, shipping, and total |
+| Truth Report | Turns mismatches into JSON/HTML evidence and a `SHIP` or `DO NOT SHIP` decision |
 
-Passmark is the user layer. It reads and acts on the UI like a shopper.
+The important design choice is that AI never becomes the judge of correctness.
 
-The oracle is the truth layer. It does not ask an AI whether a number looks right. It computes the number.
+Passmark is excellent at this:
 
-The reporter is the evidence layer. It writes JSON and HTML reports so a failure is not just "test failed", but a bug card with expected values, observed values, mismatches, and a shipping decision.
+```txt
+Click the Add button for Monsoon Hoodie
+Click the Add button for Ledger Mug
+Fill the Coupon input with SAVE20
+Fill the Email input
+Click Checkout
+Click Place order
+Verify the confirmation page shows an order total
+```
 
-## Passmark Setup
+But after checkout exists, the model steps aside.
 
-The hackathon provides OpenRouter credits, so I configured Passmark to use OpenRouter. I also used snapshot mode because I wanted this to stay compatible with the hackathon key and Passmark's normal Playwright flow.
+The oracle takes over.
+
+## The Money Oracle
+
+The store uses simple INR rules:
+
+```txt
+Coupon: SAVE20 gives 20% off
+Tax: 18%
+Shipping: ₹99.00
+Free shipping threshold: ₹2,000.00
+Rounding: Decimal.js, 2 decimal places
+```
+
+The expected total is computed as:
+
+```txt
+subtotal = sum(line totals)
+discount = subtotal * 0.20 when coupon is SAVE20
+discountedSubtotal = subtotal - discount
+tax = discountedSubtotal * 0.18
+shipping = 0 when subtotal >= 2000.00, otherwise 99.00
+total = discountedSubtotal + tax + shipping
+```
+
+This is deliberately boring.
+
+Money tests should be boring. Boring math is what makes the result trustworthy.
+
+## The Real Checkout Flow
+
+The first version of ReceiptRipper went straight from cart to confirmation. The full version has a proper checkout draft:
+
+```txt
+POST /api/checkouts
+/checkout/[id]
+Place order
+/orders/[id]
+```
+
+That matters because checkout is its own truth surface. It can show one total while confirmation, email, invoice, API, and admin show another.
+
+The app now exposes:
+
+```txt
+Product page claim
+Cart claim
+Checkout claim
+Confirmation claim
+Email claim
+Admin claim
+API claim
+Invoice claim
+```
+
+ReceiptRipper compares each claim against the oracle.
+
+## The Seeded Bugs
+
+I added bug flags so every failure is reproducible.
+
+```txt
+BUG_COUPON_LIES
+BUG_TAX_ROUNDING_DRIFT
+BUG_EMAIL_TOTAL_WRONG
+BUG_INVOICE_CENT_OFF
+BUG_FREE_SHIPPING_THRESHOLD_WRONG
+BUG_ADMIN_IGNORES_SHIPPING
+BUG_INVENTORY_DOUBLE_SELLS
+BUG_LOCALE_DECIMAL_DRIFT
+```
+
+Each bug represents a real class of production problem:
+
+| Bug flag | What it simulates |
+| --- | --- |
+| `BUG_COUPON_LIES` | Checkout/confirmation mishandle the discount |
+| `BUG_TAX_ROUNDING_DRIFT` | Tax differs by ₹0.01 |
+| `BUG_EMAIL_TOTAL_WRONG` | Receipt email disagrees with checkout |
+| `BUG_INVOICE_CENT_OFF` | PDF invoice total is off by one paisa |
+| `BUG_FREE_SHIPPING_THRESHOLD_WRONG` | UI claims free shipping below the real threshold |
+| `BUG_ADMIN_IGNORES_SHIPPING` | Admin order drops shipping from the total |
+| `BUG_INVENTORY_DOUBLE_SELLS` | Two buyers can buy the only remaining item |
+| `BUG_LOCALE_DECIMAL_DRIFT` | Locale parsing turns formatted money into the wrong number |
+
+The mutant suite is green only when the bug is caught.
+
+That is the core trick:
+
+> A mutant test passes when ReceiptRipper catches the lie.
+
+## Passmark And Redis
+
+The hackathon gives OpenRouter credits, so I configured Passmark through OpenRouter:
 
 ```ts
-import { configure } from "passmark";
-
 configure({
   ai: {
     gateway: "openrouter",
@@ -150,73 +271,41 @@ configure({
       utility: "google/gemini-2.0-flash-lite-001",
     },
   },
+  redis: process.env.REDIS_URL ? { url: process.env.REDIS_URL } : undefined,
   email: localInboxProvider(baseURL),
 });
 ```
 
-My local `.env` contains:
+Redis is important because Passmark is designed around the idea that AI discovers the flow once, then cached Playwright actions make repeat runs cheaper and faster.
 
-```txt
-OPENROUTER_API_KEY=sk-or-...
-PASSMARK_AI=on
-PASSMARK_LOG_LEVEL=info
+I used Docker only for Redis:
+
+```yaml
+services:
+  redis:
+    image: redis:8.6.3-alpine
+    ports:
+      - "6379:6379"
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
 ```
 
-The API key is not committed.
+The Redis-backed full run passed with:
 
-## The Passmark Checkout Test
-
-The dedicated AI-driven test is small. It resets the app, asks Passmark to shop the store, then lets the oracle judge the generated order.
-
-```ts
-test("Passmark shops the store and the money oracle approves it @passmark", async ({ page, request }) => {
-  test.setTimeout(120_000);
-  await resetApp(request);
-
-  const orderId = await shopWithPassmark(page, {
-    products: ["Monsoon Hoodie", "Ledger Mug"],
-    couponCode: "SAVE20",
-    customerEmail: "passmark-shopper@receiptripper.test",
-  });
-
-  const report = await buildReport(request, orderId, "passmark-checkout", "honest");
-
-  expect(report.decision).toBe("SHIP");
-  expect(report.truthScore).toBe(100);
-});
+```powershell
+docker compose up -d redis
+REDIS_URL=redis://localhost:6379 npm run test:full
+docker compose down
 ```
 
-Inside `shopWithPassmark`, the user journey is written in plain English:
+## Email Without SMTP
 
-```ts
-await runSteps({
-  page,
-  userFlow: "ReceiptRipper checkout truth flow",
-  steps: [
-    { description: "Click the Add button for Monsoon Hoodie" },
-    { description: "Click the Add button for Ledger Mug" },
-    { description: "Fill the Coupon input", data: { value: "SAVE20" } },
-    { description: "Fill the Name input", data: { value: "Ada Lovelace" } },
-    { description: "Fill the Email input", data: { value: "passmark-shopper@receiptripper.test" } },
-    { description: "Click the Checkout button" },
-  ],
-  assertions: [
-    { assertion: "The order confirmation page is visible and shows an order total." },
-  ],
-  test,
-  expect,
-});
-```
+Receipt bugs often hide in email.
 
-That is the part Passmark owns. It can find the UI and complete checkout. Once the order exists, the deterministic report takes over.
+Checkout can show the right total while the customer email uses stale data, misses a discount, or rounds differently.
 
-## Local Email Without Real SMTP
+I did not want real SMTP in the critical path, so ReceiptRipper has an in-memory local inbox. When an order is created, the app writes the email receipt into local process state. A custom Passmark email provider reads from `/api/emails`.
 
-Receipt bugs often hide in email. A checkout page can be right while the customer receipt is stale, rounded differently, or missing a discount.
-
-I did not want real SMTP in the critical path, so the app has an in-memory local inbox. When an order is created, the store writes an email receipt into process-local state. The test harness provides a custom Passmark email provider that reads from `/api/emails`.
-
-The provider supports Passmark-style email extraction:
+That lets the suite use Passmark-style email extraction:
 
 ```ts
 data: {
@@ -224,158 +313,93 @@ data: {
 }
 ```
 
-That let me keep the email flow realistic without adding external infrastructure.
+No external mailbox. No flaky email delivery. Still a real email truth surface.
 
-## Seeded Bugs
+## Locale Truth
 
-The app can run honestly, or it can run with seeded bug flags. The test API resets state before every spec:
+Locale bugs are sneaky because the page still looks right to a human.
 
-```txt
-POST /api/test/reset
-```
-
-Each mutant run enables one or more bug flags:
+ReceiptRipper formats and parses INR across:
 
 ```txt
-BUG_COUPON_LIES
-BUG_TAX_ROUNDING_DRIFT
-BUG_EMAIL_TOTAL_WRONG
-BUG_INVOICE_CENT_OFF
-BUG_FREE_SHIPPING_THRESHOLD_WRONG
-BUG_ADMIN_IGNORES_SHIPPING
+en-IN
+en-US
+en-GB
+de-DE
+fr-FR
 ```
 
-These are not random failures. Each bug represents a real commerce class of problem:
+The `de-DE` case is especially useful because thousands and decimal separators differ from English-style formatting.
 
-| Bug | What it simulates |
-| --- | --- |
-| Coupon lie | Checkout and confirmation ignore the real discount |
-| Tax rounding drift | Checkout is off by one paisa on tax and total |
-| Email total wrong | Receipt email disagrees with checkout |
-| Invoice cent off | PDF invoice total differs by 0.01 |
-| Free shipping threshold wrong | UI claims free shipping below the real threshold |
-| Admin ignores shipping | Back-office order total does not match the customer-facing order |
+The locale mutant intentionally parses a localized string incorrectly. The test catches the drift before it becomes a money bug.
 
-This is the part I care about most. The suite is not trying to produce 50 shallow checks. It tries to catch a few expensive lies very clearly.
+## Inventory Truth
 
-## Truth Report
+Inventory is another truth surface.
 
-Every run writes:
+I added a `Last Stock Poster` product with inventory `1`.
+
+The honest race test sends two buyers at the same time:
+
+```txt
+Buyer A tries to buy the last item.
+Buyer B tries to buy the last item.
+```
+
+The expected result:
+
+```txt
+One order succeeds with 201.
+One order fails with 409.
+```
+
+The mutant mode enables double-selling. In that mode both orders succeed, and the test proves ReceiptRipper can expose the inventory lie.
+
+## The Truth Report
+
+Every scenario writes a JSON and HTML report:
 
 ```txt
 reports/<scenario>.json
 reports/<scenario>.html
 ```
 
-The report contains:
-
-1. Run ID
-2. Order ID
-3. Scenario name
-4. Expected money breakdown
-5. Observed money claims by source
-6. Mismatch list
-7. Truth score
-8. Decision: `SHIP` or `DO NOT SHIP`
-9. Evidence such as invoice text
-
-An honest checkout run produces:
+The full run also writes:
 
 ```txt
-Scenario: passmark-checkout
-Decision: SHIP
-Truth score: 100
-
-Expected:
-Subtotal: INR 2,399.00
-Discount: INR 479.80
-Tax: INR 345.46
-Shipping: INR 0.00
-Total: INR 2,264.66
+reports/index.html
+reports/index.json
 ```
 
-The test passes only when every checked source agrees.
+The report includes:
 
-## The Red Report
+1. Scenario name
+2. Bug flags
+3. Expected money breakdown
+4. Observed claims by source
+5. Mismatches
+6. Truth score
+7. `SHIP` or `DO NOT SHIP`
+8. Evidence paths
+9. Invoice text
+10. Repro command
 
-Here is a seeded mutant where the admin order ignores shipping and the invoice is off by one paisa:
-
-![ReceiptRipper red truth report](https://raw.githubusercontent.com/ladiesmans217/Breaking-Apps/main/article-assets/truth-dashboard.png)
-
-The report says:
+The aggregate report is intentionally simple:
 
 ```txt
-Decision: DO NOT SHIP
-Truth score: 91
-
-Expected total: INR 1,455.94
-
-Mismatches:
-Admin order shipping expected INR 99.00, observed INR 0.00
-Admin order total expected INR 1,455.94, observed INR 1,356.94
-Invoice PDF total expected INR 1,455.94, observed INR 1,455.95
+full-product-cart       SHIP   100%
+full-threshold-under    SHIP   100%
+full-threshold-exact    SHIP   100%
+full-threshold-over     SHIP   100%
+full-locale             SHIP   100%
+full-inventory-race     SHIP   100%
 ```
 
-That is the demo moment. The checkout itself can look calm. The report shows where the store lied.
+That gives judges a quick “yes, this ran” moment before they dive into code.
 
-![ReceiptRipper mutant report artifact](https://raw.githubusercontent.com/ladiesmans217/Breaking-Apps/main/article-assets/mutant-invoice-admin-report.png)
+## Final Verification
 
-## Tests I Shipped
-
-I kept the suite small and sharp.
-
-### Unit Tests
-
-Vitest covers:
-
-1. Money oracle math
-2. Coupon calculation
-3. Tax rounding
-4. Free shipping threshold
-5. Bug-flag behavior
-6. Truth report scoring
-
-### Passmark And Playwright Tests
-
-The E2E suite covers:
-
-1. A real Passmark checkout flow through the local store
-2. Honest coupon truth across UI, email, admin, API, and invoice
-3. Coupon lie detection
-4. Tax rounding drift detection
-5. Free shipping threshold lie detection
-6. Email receipt total mismatch detection
-7. Invoice/admin/API truth separation
-
-Two execution modes matter:
-
-```txt
-npm run truth:honest
-npm run truth:mutants
-```
-
-`truth:honest` must produce a clean `SHIP` report.
-
-`truth:mutants` must catch the seeded bugs and still exit successfully because the tests expected those mismatches. A mutant run is green only when ReceiptRipper catches the lie.
-
-## Final Local Run
-
-The full verification command passed:
-
-```bash
-npm test
-```
-
-It ran:
-
-```txt
-Vitest unit tests: 8 passed
-Real Passmark checkout test: 1 passed
-Honest truth run: 1 passed
-Mutant truth run: 5 passed
-```
-
-I also ran:
+I ran:
 
 ```bash
 npm run lint
@@ -383,26 +407,54 @@ npm run typecheck
 npm run build
 ```
 
-All passed locally.
+All passed.
 
-## What Surprised Me
+Then I ran the full Redis-backed suite:
 
-The biggest lesson was that AI is very useful at the edge of the product, but I do not want it to be the source of truth.
+```powershell
+docker compose up -d redis
+REDIS_URL=redis://localhost:6379 npm run test:full
+docker compose down
+```
 
-Passmark is good at acting like a shopper:
+Final result:
 
-1. Find the button
-2. Fill the coupon
-3. Complete checkout
-4. Confirm that an order page appeared
+```txt
+Unit tests: 12 passed
+Real Passmark checkout: 1 passed
+Honest truth run: 1 passed
+Mutant truth run: 7 passed
+Full original truth run: 5 passed
+```
 
-But the value of the test suite comes from refusing to let the AI decide whether the money is correct. The model drives the browser. Decimal math judges the totals.
+The first Redis-backed run hit a transient DNS failure to `openrouter.ai`, so I reran it. The rerun passed.
 
-That split made the tests feel much more trustworthy.
+That matters because the failure was not a product bug. The product and Redis setup were fine. The retry proved the actual suite.
 
-The second lesson was that not all evidence belongs inside Passmark. PDF invoice parsing, report generation, direct API calls, and mutant orchestration are better handled with deterministic Playwright and Node helpers. Passmark is the human-facing flow layer. Playwright is the forensic layer.
+## What I Learned
 
-The third lesson was cost control. Natural-language tests are not free, even with hackathon credits. I kept one dedicated AI checkout spec, then used deterministic helpers for repeated mutant scenarios. That kept the project reproducible without burning model calls on every small regression check.
+The obvious use case for AI regression testing is:
+
+> Let AI click the app so I do not write selectors.
+
+That is useful, but ReceiptRipper made me care about a different pattern:
+
+> Let AI reach the user-visible truth, then compare that truth against a deterministic invariant.
+
+For this project, the invariant is money.
+
+I do not want an AI deciding whether ₹1,455.94 is correct.
+
+I want the AI to behave like the shopper, reach checkout, open the email, download the invoice, and expose the claims. Then I want deterministic code to judge those claims.
+
+That split feels much more reliable:
+
+```txt
+AI for navigation.
+Playwright for evidence.
+Redis for replay.
+Decimal math for truth.
+```
 
 ## How To Run It
 
@@ -426,24 +478,27 @@ Create `.env`:
 OPENROUTER_API_KEY=sk-or-...
 PASSMARK_AI=on
 PASSMARK_LOG_LEVEL=info
+REDIS_URL=redis://localhost:6379
 ```
 
-Run the full suite:
+Run the normal suite:
 
 ```bash
 npm test
 ```
 
-Run only the honest truth check:
+Run the full original gauntlet:
 
 ```bash
-npm run truth:honest
+npm run truth:full
 ```
 
-Run only the mutant gauntlet:
+Run with Redis:
 
 ```bash
-npm run truth:mutants
+docker compose up -d redis
+npm run test:full
+docker compose down
 ```
 
 Start the app:
@@ -459,56 +514,53 @@ http://127.0.0.1:3100
 http://127.0.0.1:3100/truth
 ```
 
-The generated evidence lives in:
-
-```txt
-reports/
-article-assets/
-playwright-report/
-test-results/
-```
-
 ## What I Would Add Next
 
-The MVP proves the core idea, but the next version could go deeper:
+ReceiptRipper is now complete as a controlled-store truth lab. The next version should test a real commerce engine:
 
-1. Locale and currency parsing across `en-IN`, `en-US`, `de-DE`, and `fr-FR`
-2. Inventory race tests with two shoppers buying the last item
-3. A real Medusa or Saleor target after the controlled store
-4. GitHub Actions with the honest suite on every push
-5. Optional Redis caching for larger Passmark suites
-6. Video evidence stitched into each Truth Report
-7. A public hosted demo so the report can be inspected without cloning the repo
+1. Medusa or Saleor checkout as the target
+2. Refund and return truth
+3. Order edit truth
+4. Payment provider webhook truth
+5. GitHub Actions with Redis
+6. Hosted demo with public report artifacts
+7. Video evidence embedded directly inside reports
 
-I would still keep the main idea the same:
+But I would keep the core architecture unchanged.
 
-> Passmark shops. Playwright records. Decimal math judges.
+The AI should not be the judge.
+
+The AI should be the shopper.
 
 ## Final Thought
 
-This project changed how I think about AI regression testing.
+Passmark made it easy to express a real user flow in plain English.
 
-The obvious use case is "let AI click around so I do not write selectors." That is useful, but it is not the most interesting part.
+ReceiptRipper adds the part I think every serious AI regression suite needs:
 
-The more interesting pattern is:
+```txt
+A deterministic truth oracle.
+```
 
-> Let AI observe the product like a user, then compare what it saw against a deterministic invariant.
+Because the scariest bugs are not always the ones that crash.
 
-For ReceiptRipper, the invariant is money truth. A store must not say different totals in checkout, email, admin, API, and invoice.
+Sometimes the page loads.
 
-That is why the build is called ReceiptRipper.
+Sometimes checkout completes.
 
-It lets AI shop until the checkout lies.
+Sometimes the receipt arrives.
 
-Then it rips the receipt open.
+And sometimes the store quietly tells three different versions of the truth.
 
-Built for **#BreakingAppsHackathon**.
+ReceiptRipper catches that.
+
+Built for **#breakingappshackathon**.
 
 ## Resources
 
 - Project repo: https://github.com/ladiesmans217/Breaking-Apps
-- Passmark website: https://passmark.dev/
-- Passmark GitHub repo: https://github.com/bug0inc/passmark
-- Breaking Apps Hackathon page: https://hashnode.com/hackathons/breaking-things
+- Passmark: https://passmark.dev/
+- Passmark GitHub: https://github.com/bug0inc/passmark
+- Breaking Apps Hackathon: https://hashnode.com/hackathons/breaking-things
 - Playwright docs: https://playwright.dev/docs/intro
-- Next.js installation docs: https://nextjs.org/docs/app/getting-started/installation
+- Next.js docs: https://nextjs.org/docs/app/getting-started/installation
