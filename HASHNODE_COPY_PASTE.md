@@ -8,7 +8,7 @@ Passmark drove checkout like a shopper. Decimal math checked whether cart, check
 
 Tags:
 
-breakingappshackathon, passmark, playwright, testing, nextjs
+BreakingAppsHackathon, Passmark, Playwright, Testing, Nextjs
 
 Body:
 

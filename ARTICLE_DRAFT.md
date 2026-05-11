@@ -18,6 +18,8 @@ The project thesis is simple:
 
 > **AI is the shopper. Math is the judge.**
 
+I built this for **#BreakingAppsHackathon** by Hashnode and Bug0, using Passmark as the AI regression layer and OpenRouter for the hackathon-provided model gateway.
+
 ![ReceiptRipper storefront](https://raw.githubusercontent.com/ladiesmans217/Breaking-Apps/main/article-assets/storefront.png)
 
 ## Why I Built A Controlled Store
@@ -474,6 +476,8 @@ That is why the build is called ReceiptRipper.
 It lets AI shop until the checkout lies.
 
 Then it rips the receipt open.
+
+Built for **#BreakingAppsHackathon**.
 
 ## Resources
 
