@@ -1,10 +1,10 @@
 Title:
 
-I Let AI Shop Until My Checkout Lied: Building ReceiptRipper with Passmark
+I Let AI Shop Until Checkout Lied: Building ReceiptRipper with Passmark
 
 Subtitle:
 
-Passmark drove checkout like a shopper. Decimal math checked whether cart, checkout, email, admin, API, and invoice told the same money truth.
+Passmark completed checkout like a real shopper. A Decimal oracle compared cart, checkout, email, admin, API, and invoice totals, then generated a red DO NOT SHIP report when money drifted by even ₹0.01.
 
 Tags:
 

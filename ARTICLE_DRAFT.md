@@ -20,6 +20,25 @@ The project thesis is simple:
 
 I built this for **#BreakingAppsHackathon** by Hashnode and Bug0, using Passmark as the AI regression layer and OpenRouter for the hackathon-provided model gateway.
 
+Here is the short version:
+
+```txt
+Target: A controlled Next.js commerce store
+AI layer: Passmark with OpenRouter
+Truth layer: Decimal.js money oracle
+Evidence: Playwright traces, API reads, email extraction, invoice PDF parsing, HTML reports
+Honest run: SHIP, 100% truth score
+Mutant run: DO NOT SHIP, seeded checkout lies caught
+```
+
+What you will find below:
+
+1. Why I built a controlled store instead of another generic website scanner
+2. How I made Passmark act as the shopper, not the judge
+3. The exact money invariant behind the project
+4. The seeded bugs ReceiptRipper catches
+5. The final test results and what I learned about AI regression testing
+
 ![ReceiptRipper storefront](https://raw.githubusercontent.com/ladiesmans217/Breaking-Apps/main/article-assets/storefront.png)
 
 ## Why I Built A Controlled Store
@@ -27,6 +46,12 @@ I built this for **#BreakingAppsHackathon** by Hashnode and Bug0, using Passmark
 For the Breaking Apps Hackathon, the obvious move was to point Passmark at a public demo app and write a suite of natural-language regression tests.
 
 That works, but I wanted a test target where every failure was reproducible. Money bugs are especially good for this because they do not need much explanation. If checkout says one total and the invoice says another, nobody argues that the test is being picky.
+
+That was the gap I wanted to attack. Not "does the page render?" Not "is the button visible?" Not "can an AI click around?"
+
+The question was sharper:
+
+> Can the store prove the same total across every place a customer or operator would see it?
 
 So I built **ReceiptRipper Store**, a local Next.js commerce app with the exact surfaces I wanted to test:
 
