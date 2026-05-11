@@ -18,6 +18,7 @@
   <p>RECEIPTRIPPER TRUTH REPORT</p>
   <h1 class="decision good">SHIP</h1>
   <p>Truth score: 100% · Order: rr_20260511_001 · Scenario: honest-coupon</p>
+  <p>Bug flags: None</p>
   <table>
     <thead><tr><th>Source</th><th>Subtotal</th><th>Discount</th><th>Tax</th><th>Shipping</th><th>Total</th></tr></thead>
     <tbody>
@@ -88,5 +89,27 @@
   </table>
   <h2>Mismatches</h2>
   <ul><li>None</li></ul>
+  <h2>Evidence</h2>
+  <ul><li><strong>invoiceText</strong>: ReceiptRipper Invoice
+Order: rr_20260511_001
+Customer: Ada Lovelace
+Email: honest-coupon@receiptripper.test
+1 x Monsoon Hoodie (RR-HOODIE-001)
+Unit: ¹1,999.00 Line: ¹1,999.00
+1 x Ledger Mug (RR-MUG-002)
+Unit: ¹400.00 Line: ¹400.00
+ReceiptRipper Invoice
+Order: rr_20260511_001
+Customer: Ada Lovelace
+Email: honest-coupon@receiptripper.test
+Subtotal: ¹2,399.00
+Discount: ¹479.80
+Tax: ¹345.46
+Shipping: ¹0.00
+Total: ¹2,264.66
+
+-- 1 of 1 --
+
+</li><li><strong>screenshot</strong>: reports\evidence\honest-coupon.png</li><li><strong>reproCommand</strong>: npx playwright test tests/e2e --grep honest-coupon</li></ul>
 </body>
 </html>

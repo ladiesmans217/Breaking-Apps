@@ -25,4 +25,5 @@ tsconfig.tsbuildinfo
 reports/playwright-results.json
 reports/screenshots/
 reports/traces/
+reports/evidence/
 reports/invoices/

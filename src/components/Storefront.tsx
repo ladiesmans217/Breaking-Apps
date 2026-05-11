@@ -3,7 +3,7 @@
 import { Minus, Plus, ReceiptText, ShoppingCart } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { formatINR } from "@/lib/truth/money";
+import { formatINRForLocale, SUPPORTED_LOCALES } from "@/lib/truth/money";
 import type { Product } from "@/lib/truth/types";
 
 type Cart = Record<string, number>;
@@ -23,6 +23,7 @@ export function Storefront({ products }: { products: Product[] }) {
   const [couponCode, setCouponCode] = useState("SAVE20");
   const [customerEmail, setCustomerEmail] = useState("shopper@receiptripper.test");
   const [customerName, setCustomerName] = useState("Ada Lovelace");
+  const [locale, setLocale] = useState<(typeof SUPPORTED_LOCALES)[number]>("en-IN");
   const [submitting, setSubmitting] = useState(false);
   const count = cartCount(cart);
   const subtotal = useMemo(() => cartSubtotal(products, cart), [products, cart]);
@@ -45,18 +46,19 @@ export function Storefront({ products }: { products: Product[] }) {
   async function checkout() {
     setSubmitting(true);
     try {
-      const response = await fetch("/api/orders", {
+      const response = await fetch("/api/checkouts", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           customerEmail,
           customerName,
           couponCode,
+          locale,
           cart: Object.entries(cart).map(([productId, quantity]) => ({ productId, quantity })),
         }),
       });
-      const data = (await response.json()) as { order: { id: string } };
-      router.push(`/orders/${data.order.id}`);
+      const data = (await response.json()) as { checkout: { id: string } };
+      router.push(`/checkout/${data.checkout.id}`);
     } finally {
       setSubmitting(false);
     }
@@ -82,7 +84,8 @@ export function Storefront({ products }: { products: Product[] }) {
               {product.badge ? <span className="badge">{product.badge}</span> : null}
               <h2>{product.name}</h2>
               <p className="muted">{product.description}</p>
-              <div className="price">{formatINR(product.price)}</div>
+              <div className="price">{formatINRForLocale(product.price, locale)}</div>
+              <p className="muted">Stock: {product.inventory}</p>
               <button className="button" onClick={() => add(product.id)} aria-label={`Add ${product.name} to cart`}>
                 <ShoppingCart size={18} />
                 Add
@@ -98,7 +101,7 @@ export function Storefront({ products }: { products: Product[] }) {
             <div className="line" key={product.id}>
               <div>
                 <strong>{product.name}</strong>
-                <div className="muted">{formatINR(product.price)}</div>
+                <div className="muted">{formatINRForLocale(product.price, locale)}</div>
               </div>
               <div className="qty">
                 <button className="icon-button" onClick={() => remove(product.id)} aria-label={`Remove ${product.name}`}>
@@ -129,11 +132,26 @@ export function Storefront({ products }: { products: Product[] }) {
               onChange={(event) => setCustomerEmail(event.target.value)}
             />
           </div>
+          <div className="field">
+            <label htmlFor="locale">Locale</label>
+            <select
+              id="locale"
+              aria-label="Locale"
+              value={locale}
+              onChange={(event) => setLocale(event.target.value as (typeof SUPPORTED_LOCALES)[number])}
+            >
+              {SUPPORTED_LOCALES.map((supportedLocale) => (
+                <option key={supportedLocale} value={supportedLocale}>
+                  {supportedLocale}
+                </option>
+              ))}
+            </select>
+          </div>
 
           <div className="totals">
             <div className="total-row">
               <span>Visible product subtotal</span>
-              <strong>{formatINR(subtotal)}</strong>
+              <strong>{formatINRForLocale(subtotal, locale)}</strong>
             </div>
             <div className="total-row final">
               <span>Items</span>

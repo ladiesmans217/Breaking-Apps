@@ -18,6 +18,7 @@
   <p>RECEIPTRIPPER TRUTH REPORT</p>
   <h1 class="decision bad">DO NOT SHIP</h1>
   <p>Truth score: 94% · Order: rr_20260511_001 · Scenario: mutant-coupon</p>
+  <p>Bug flags: <code>BUG_COUPON_LIES</code></p>
   <table>
     <thead><tr><th>Source</th><th>Subtotal</th><th>Discount</th><th>Tax</th><th>Shipping</th><th>Total</th></tr></thead>
     <tbody>
@@ -88,5 +89,15 @@
   </table>
   <h2>Mismatches</h2>
   <ul><li>Checkout total: expected ₹2,264.66, observed ₹1,784.86</li><li>Confirmation page total: expected ₹2,264.66, observed ₹1,784.86</li></ul>
+  <h2>Evidence</h2>
+  <ul><li><strong>invoiceText</strong>: ReceiptRipper Invoice
+Order: rr_20260511_001
+Customer: Ada Lovelace
+Email: mutant-coupon@receiptripper.test
+Subtotal: ₹2,399.00
+Discount: ₹479.80
+Tax: ₹345.46
+Shipping: ₹0.00
+Total: ₹2,264.66</li><li><strong>screenshot</strong>: reports\evidence\mutant-coupon.png</li><li><strong>reproCommand</strong>: npx playwright test tests/e2e --grep mutant-coupon</li></ul>
 </body>
 </html>

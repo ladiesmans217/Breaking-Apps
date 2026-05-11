@@ -1,17 +1,21 @@
 {
-  "runId": "tr_1778463130599",
+  "runId": "tr_1778484414732",
   "orderId": "rr_20260511_001",
   "mode": "mutant",
   "scenario": "mutant-invoice-admin",
   "decision": "DO NOT SHIP",
   "truthScore": 91,
-  "checkedAt": "2026-05-11T01:32:10.599Z",
+  "checkedAt": "2026-05-11T07:26:54.732Z",
   "expected": {
     "subtotal": "1149.95",
     "discount": "0.00",
     "tax": "206.99",
     "shipping": "99.00",
     "total": "1455.94"
+  },
+  "bugFlags": {
+    "BUG_INVOICE_CENT_OFF": true,
+    "BUG_ADMIN_IGNORES_SHIPPING": true
   },
   "sources": [
     {
@@ -175,6 +179,8 @@
     }
   ],
   "evidence": {
-    "invoiceText": "ReceiptRipper Invoice\nOrder: rr_20260511_001\nCustomer: Ada Lovelace\nEmail: mutant-invoice-admin@receiptripper.test\n1 x Precision Mat (RR-MAT-003)\nUnit: ¹999.99 Line: ¹999.99\n1 x Copper Cable (RR-CABLE-004)\nUnit: ¹149.95 Line: ¹149.95\n1 x One Paisa Washer (RR-WASHER-005)\nUnit: ¹0.01 Line: ¹0.01\nReceiptRipper Invoice\nOrder: rr_20260511_001\nCustomer: Ada Lovelace\nEmail: mutant-invoice-admin@receiptripper.test\nSubtotal: ¹1,149.95\nDiscount: ¹0.00\nTax: ¹206.99\nShipping: ¹99.00\nTotal: ¹1,455.95\n\n-- 1 of 1 --\n\n"
+    "invoiceText": "ReceiptRipper Invoice\nOrder: rr_20260511_001\nCustomer: Ada Lovelace\nEmail: mutant-invoice-admin@receiptripper.test\n1 x Precision Mat (RR-MAT-003)\nUnit: ¹999.99 Line: ¹999.99\n1 x Copper Cable (RR-CABLE-004)\nUnit: ¹149.95 Line: ¹149.95\n1 x One Paisa Washer (RR-WASHER-005)\nUnit: ¹0.01 Line: ¹0.01\nReceiptRipper Invoice\nOrder: rr_20260511_001\nCustomer: Ada Lovelace\nEmail: mutant-invoice-admin@receiptripper.test\nSubtotal: ¹1,149.95\nDiscount: ¹0.00\nTax: ¹206.99\nShipping: ¹99.00\nTotal: ¹1,455.95\n\n-- 1 of 1 --\n\n",
+    "screenshot": "reports\\evidence\\mutant-invoice-admin.png",
+    "reproCommand": "npx playwright test tests/e2e --grep mutant-invoice-admin"
   }
 }

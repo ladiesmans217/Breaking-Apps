@@ -17,6 +17,7 @@ configure({
       utility: "google/gemini-2.0-flash-lite-001",
     },
   },
+  redis: process.env.REDIS_URL ? { url: process.env.REDIS_URL } : undefined,
 });
 
 export default defineConfig({

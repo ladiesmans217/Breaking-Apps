@@ -3,8 +3,8 @@ import { runSteps } from "passmark";
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { PDFParse } from "pdf-parse";
-import { renderTruthReportHtml } from "../../src/lib/reporter/render";
-import type { BugFlags, TruthReport } from "../../src/lib/truth/types";
+import { renderTruthReportHtml, renderTruthRunHtml } from "../../src/lib/reporter/render";
+import type { BugFlags, TruthReport, TruthRun } from "../../src/lib/truth/types";
 import { configurePassmark, shouldUsePassmarkAI } from "./passmark";
 
 const BASE_URL = process.env.BASE_URL ?? "http://127.0.0.1:3100";
@@ -14,6 +14,7 @@ export type CheckoutInput = {
   couponCode?: string;
   customerEmail: string;
   customerName?: string;
+  locale?: string;
 };
 
 export async function resetApp(request: APIRequestContext, flags: BugFlags = {}) {
@@ -29,7 +30,12 @@ async function rawShop(page: Page, input: CheckoutInput): Promise<string> {
   await page.getByLabel("Coupon").fill(input.couponCode ?? "");
   await page.getByLabel("Name").fill(input.customerName ?? "Ada Lovelace");
   await page.getByLabel("Email").fill(input.customerEmail);
+  if (input.locale) {
+    await page.getByLabel("Locale", { exact: true }).selectOption(input.locale);
+  }
   await page.getByRole("button", { name: "Checkout" }).click();
+  await page.waitForURL(/\/checkout\/co_/);
+  await page.getByRole("button", { name: "Place order" }).click();
   await page.waitForURL(/\/orders\/rr_/);
   return page.url().split("/").at(-1) ?? "";
 }
@@ -44,12 +50,15 @@ async function passmarkShop(page: Page, input: CheckoutInput): Promise<string> {
       { description: "Fill the Coupon input", data: { value: input.couponCode ?? "" } },
       { description: "Fill the Name input", data: { value: input.customerName ?? "Ada Lovelace" } },
       { description: "Fill the Email input", data: { value: input.customerEmail } },
+      ...(input.locale ? [{ description: "Select the Locale option", data: { value: input.locale } }] : []),
       { description: "Click the Checkout button" },
+      { description: "Click the Place order button" },
     ],
     assertions: [{ assertion: "The order confirmation page is visible and shows an order total." }],
     test: playwrightTest,
     expect,
   });
+  await page.waitForURL(/\/orders\/rr_/);
   await page.waitForURL(/\/orders\/rr_/);
   return page.url().split("/").at(-1) ?? "";
 }
@@ -90,9 +99,24 @@ export async function buildReport(
   scenario: string,
   mode: "honest" | "mutant",
   evidence: TruthReport["evidence"] = {},
+  page?: Page,
 ): Promise<TruthReport> {
+  const screenshotPath = path.join("reports", "evidence", `${scenario}.png`);
+  await mkdir(path.join(process.cwd(), "reports", "evidence"), { recursive: true });
+  if (page) {
+    await page.screenshot({ path: screenshotPath, fullPage: true });
+  }
   const response = await request.post(`${BASE_URL}/api/truth`, {
-    data: { orderId, scenario, mode, evidence },
+    data: {
+      orderId,
+      scenario,
+      mode,
+      evidence: {
+        reproCommand: `npx playwright test tests/e2e --grep ${scenario}`,
+        screenshot: page ? screenshotPath : undefined,
+        ...evidence,
+      },
+    },
   });
   expect(response.ok()).toBeTruthy();
   const data = (await response.json()) as { report: TruthReport };
@@ -105,6 +129,17 @@ async function persistReport(report: TruthReport, scenario: string): Promise<voi
   await mkdir(reportsDir, { recursive: true });
   await writeFile(path.join(reportsDir, `${scenario}.json`), JSON.stringify(report, null, 2));
   await writeFile(path.join(reportsDir, `${scenario}.html`), renderTruthReportHtml(report));
+}
+
+export async function publishAggregateRun(request: APIRequestContext, reports: TruthReport[]): Promise<TruthRun> {
+  const response = await request.put(`${BASE_URL}/api/truth`, { data: { reports } });
+  expect(response.ok()).toBeTruthy();
+  const data = (await response.json()) as { run: TruthRun };
+  const reportsDir = path.join(process.cwd(), "reports");
+  await mkdir(reportsDir, { recursive: true });
+  await writeFile(path.join(reportsDir, "index.json"), JSON.stringify(data.run, null, 2));
+  await writeFile(path.join(reportsDir, "index.html"), renderTruthRunHtml(data.run));
+  return data.run;
 }
 
 export async function downloadInvoiceText(page: Page, orderId: string, scenario: string): Promise<string> {

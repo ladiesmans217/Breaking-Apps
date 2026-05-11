@@ -78,6 +78,7 @@ export function buildTruthReport(input: {
     truthScore,
     checkedAt: new Date().toISOString(),
     expected: order.expected,
+    bugFlags: order.bugFlags,
     sources,
     mismatches,
     evidence: input.evidence ?? {},

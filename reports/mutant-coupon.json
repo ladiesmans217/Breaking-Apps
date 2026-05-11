@@ -1,17 +1,20 @@
 {
-  "runId": "tr_1778463116461",
+  "runId": "tr_1778484400867",
   "orderId": "rr_20260511_001",
   "mode": "mutant",
   "scenario": "mutant-coupon",
   "decision": "DO NOT SHIP",
   "truthScore": 94,
-  "checkedAt": "2026-05-11T01:31:56.461Z",
+  "checkedAt": "2026-05-11T07:26:40.867Z",
   "expected": {
     "subtotal": "2399.00",
     "discount": "479.80",
     "tax": "345.46",
     "shipping": "0.00",
     "total": "2264.66"
+  },
+  "bugFlags": {
+    "BUG_COUPON_LIES": true
   },
   "sources": [
     {
@@ -168,6 +171,8 @@
     }
   ],
   "evidence": {
-    "invoiceText": "ReceiptRipper Invoice\nOrder: rr_20260511_001\nCustomer: Ada Lovelace\nEmail: mutant-coupon@receiptripper.test\nSubtotal: ₹2,399.00\nDiscount: ₹479.80\nTax: ₹345.46\nShipping: ₹0.00\nTotal: ₹2,264.66"
+    "invoiceText": "ReceiptRipper Invoice\nOrder: rr_20260511_001\nCustomer: Ada Lovelace\nEmail: mutant-coupon@receiptripper.test\nSubtotal: ₹2,399.00\nDiscount: ₹479.80\nTax: ₹345.46\nShipping: ₹0.00\nTotal: ₹2,264.66",
+    "screenshot": "reports\\evidence\\mutant-coupon.png",
+    "reproCommand": "npx playwright test tests/e2e --grep mutant-coupon"
   }
 }

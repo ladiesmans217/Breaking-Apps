@@ -1,11 +1,11 @@
 {
-  "runId": "tr_1778484404702",
+  "runId": "tr_1778484430352",
   "orderId": "rr_20260511_001",
-  "mode": "mutant",
-  "scenario": "mutant-threshold",
-  "decision": "DO NOT SHIP",
-  "truthScore": 88,
-  "checkedAt": "2026-05-11T07:26:44.703Z",
+  "mode": "honest",
+  "scenario": "full-threshold-under",
+  "decision": "SHIP",
+  "truthScore": 100,
+  "checkedAt": "2026-05-11T07:27:10.352Z",
   "expected": {
     "subtotal": "1999.99",
     "discount": "0.00",
@@ -13,9 +13,7 @@
     "shipping": "99.00",
     "total": "2458.99"
   },
-  "bugFlags": {
-    "BUG_FREE_SHIPPING_THRESHOLD_WRONG": true
-  },
+  "bugFlags": {},
   "sources": [
     {
       "source": "product",
@@ -38,8 +36,8 @@
         "subtotal": "1999.99",
         "discount": "0.00",
         "tax": "360.00",
-        "shipping": "0.00",
-        "total": "2359.99"
+        "shipping": "99.00",
+        "total": "2458.99"
       },
       "fields": [
         "subtotal",
@@ -56,8 +54,8 @@
         "subtotal": "1999.99",
         "discount": "0.00",
         "tax": "360.00",
-        "shipping": "0.00",
-        "total": "2359.99"
+        "shipping": "99.00",
+        "total": "2458.99"
       },
       "fields": [
         "subtotal",
@@ -154,39 +152,10 @@
       ]
     }
   ],
-  "mismatches": [
-    {
-      "source": "cart",
-      "label": "Cart",
-      "field": "shipping",
-      "expected": "99.00",
-      "observed": "0.00"
-    },
-    {
-      "source": "cart",
-      "label": "Cart",
-      "field": "total",
-      "expected": "2458.99",
-      "observed": "2359.99"
-    },
-    {
-      "source": "checkout",
-      "label": "Checkout",
-      "field": "shipping",
-      "expected": "99.00",
-      "observed": "0.00"
-    },
-    {
-      "source": "checkout",
-      "label": "Checkout",
-      "field": "total",
-      "expected": "2458.99",
-      "observed": "2359.99"
-    }
-  ],
+  "mismatches": [],
   "evidence": {
-    "invoiceText": "ReceiptRipper Invoice\nOrder: rr_20260511_001\nCustomer: Ada Lovelace\nEmail: mutant-threshold@receiptripper.test\nSubtotal: ₹1,999.99\nDiscount: ₹0.00\nTax: ₹360.00\nShipping: ₹99.00\nTotal: ₹2,458.99",
-    "screenshot": "reports\\evidence\\mutant-threshold.png",
-    "reproCommand": "npx playwright test tests/e2e --grep mutant-threshold"
+    "invoiceText": "ReceiptRipper Invoice\nOrder: rr_20260511_001\nCustomer: Ada Lovelace\nEmail: threshold-pack@receiptripper.test\nSubtotal: ₹1,999.99\nDiscount: ₹0.00\nTax: ₹360.00\nShipping: ₹99.00\nTotal: ₹2,458.99",
+    "screenshot": "reports\\evidence\\full-threshold-under.png",
+    "reproCommand": "npx playwright test tests/e2e --grep full-threshold-under"
   }
 }

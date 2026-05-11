@@ -18,6 +18,7 @@
   <p>RECEIPTRIPPER TRUTH REPORT</p>
   <h1 class="decision bad">DO NOT SHIP</h1>
   <p>Truth score: 91% · Order: rr_20260511_001 · Scenario: mutant-invoice-admin</p>
+  <p>Bug flags: <code>BUG_INVOICE_CENT_OFF</code>, <code>BUG_ADMIN_IGNORES_SHIPPING</code></p>
   <table>
     <thead><tr><th>Source</th><th>Subtotal</th><th>Discount</th><th>Tax</th><th>Shipping</th><th>Total</th></tr></thead>
     <tbody>
@@ -88,5 +89,29 @@
   </table>
   <h2>Mismatches</h2>
   <ul><li>Admin order shipping: expected ₹99.00, observed ₹0.00</li><li>Admin order total: expected ₹1,455.94, observed ₹1,356.94</li><li>Invoice PDF total: expected ₹1,455.94, observed ₹1,455.95</li></ul>
+  <h2>Evidence</h2>
+  <ul><li><strong>invoiceText</strong>: ReceiptRipper Invoice
+Order: rr_20260511_001
+Customer: Ada Lovelace
+Email: mutant-invoice-admin@receiptripper.test
+1 x Precision Mat (RR-MAT-003)
+Unit: ¹999.99 Line: ¹999.99
+1 x Copper Cable (RR-CABLE-004)
+Unit: ¹149.95 Line: ¹149.95
+1 x One Paisa Washer (RR-WASHER-005)
+Unit: ¹0.01 Line: ¹0.01
+ReceiptRipper Invoice
+Order: rr_20260511_001
+Customer: Ada Lovelace
+Email: mutant-invoice-admin@receiptripper.test
+Subtotal: ¹1,149.95
+Discount: ¹0.00
+Tax: ¹206.99
+Shipping: ¹99.00
+Total: ¹1,455.95
+
+-- 1 of 1 --
+
+</li><li><strong>screenshot</strong>: reports\evidence\mutant-invoice-admin.png</li><li><strong>reproCommand</strong>: npx playwright test tests/e2e --grep mutant-invoice-admin</li></ul>
 </body>
 </html>

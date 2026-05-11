@@ -9,6 +9,8 @@ ReceiptRipper is a controlled commerce target plus a Passmark regression gauntle
 - Coupon truth across customer-visible and backend surfaces.
 - Tax rounding with awkward values like `₹999.99`, `₹149.95`, and `₹0.01`.
 - Free-shipping threshold behavior at `₹1,999.99`, `₹2,000.00`, and above.
+- Locale/currency parsing across `en-IN`, `en-US`, `en-GB`, `de-DE`, and `fr-FR`.
+- Inventory race protection for the last stock item.
 - Email receipt totals through a local Passmark email provider.
 - Invoice PDF, admin order, and API consistency.
 
@@ -21,6 +23,8 @@ BUG_EMAIL_TOTAL_WRONG
 BUG_INVOICE_CENT_OFF
 BUG_FREE_SHIPPING_THRESHOLD_WRONG
 BUG_ADMIN_IGNORES_SHIPPING
+BUG_INVENTORY_DOUBLE_SELLS
+BUG_LOCALE_DECIMAL_DRIFT
 ```
 
 ## Stack
@@ -28,6 +32,7 @@ BUG_ADMIN_IGNORES_SHIPPING
 - Next.js 16.2.6, React 19.2.6
 - Passmark 1.0.13 + Playwright 1.59.1
 - OpenRouter gateway for AI-backed Passmark runs
+- Optional Docker Redis cache for Passmark step caching
 - Decimal.js for deterministic money math
 - PDFKit + pdf-parse for invoice evidence
 - Vitest for oracle/report unit tests
@@ -52,9 +57,18 @@ npm run test:unit
 npm run test:passmark
 npm run truth:honest
 npm run truth:mutants
+npm run truth:full
 ```
 
-Reports are written to `reports/*.json` and `reports/*.html`. The latest in-process report is visible at `/truth`.
+For Redis-backed Passmark verification:
+
+```bash
+docker compose up -d redis
+REDIS_URL=redis://localhost:6379 npm run test:full
+docker compose down
+```
+
+Reports are written to `reports/*.json`, `reports/*.html`, and `reports/index.html`. The latest in-process aggregate run is visible at `/truth`.
 
 ## Core Line
 

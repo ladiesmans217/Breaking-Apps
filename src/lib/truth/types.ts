@@ -36,7 +36,9 @@ export type BugFlag =
   | "BUG_EMAIL_TOTAL_WRONG"
   | "BUG_INVOICE_CENT_OFF"
   | "BUG_FREE_SHIPPING_THRESHOLD_WRONG"
-  | "BUG_ADMIN_IGNORES_SHIPPING";
+  | "BUG_ADMIN_IGNORES_SHIPPING"
+  | "BUG_INVENTORY_DOUBLE_SELLS"
+  | "BUG_LOCALE_DECIMAL_DRIFT";
 
 export type BugFlags = Partial<Record<BugFlag, boolean>>;
 
@@ -60,12 +62,27 @@ export type SourceClaim = {
 
 export type Order = {
   id: string;
+  checkoutId?: string;
   customerEmail: string;
   customerName: string;
+  locale: string;
   couponCode?: string;
   lines: OrderLine[];
   expected: MoneyBreakdown;
   claims: Record<ClaimSource, MoneyBreakdown>;
+  bugFlags: BugFlags;
+  createdAt: string;
+};
+
+export type CheckoutDraft = {
+  id: string;
+  customerEmail: string;
+  customerName: string;
+  locale: string;
+  couponCode?: string;
+  lines: OrderLine[];
+  expected: MoneyBreakdown;
+  claims: Pick<Record<ClaimSource, MoneyBreakdown>, "product" | "cart" | "checkout">;
   bugFlags: BugFlags;
   createdAt: string;
 };
@@ -83,6 +100,7 @@ export type TruthReport = {
   orderId: string;
   mode: "honest" | "mutant";
   scenario: string;
+  bugFlags: BugFlags;
   decision: "SHIP" | "DO NOT SHIP";
   truthScore: number;
   checkedAt: string;
@@ -94,5 +112,20 @@ export type TruthReport = {
     trace?: string;
     video?: string;
     invoiceText?: string;
+    reproCommand?: string;
+    localeChecks?: {
+      locale: string;
+      formatted: string;
+      parsed: string;
+      expected: string;
+    }[];
   };
+};
+
+export type TruthRun = {
+  runId: string;
+  checkedAt: string;
+  reports: TruthReport[];
+  decision: "SHIP" | "DO NOT SHIP";
+  truthScore: number;
 };

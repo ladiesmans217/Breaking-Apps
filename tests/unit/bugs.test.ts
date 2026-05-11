@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { applyBugFlags } from "../../src/lib/truth/bugs";
+import { createOrder, InsufficientInventoryError, resetStore } from "../../src/lib/store/state";
 import type { MoneyBreakdown } from "../../src/lib/truth/types";
 
 const base: MoneyBreakdown = {
@@ -29,5 +30,38 @@ describe("seeded commerce lies", () => {
     expect(admin.shipping).toBe("0.00");
     expect(admin.total).toBe("2264.66");
     expect(api.total).toBe("2363.66");
+  });
+
+  it("prevents double-selling the last stock item by default", () => {
+    resetStore();
+    createOrder({
+      customerEmail: "one@receiptripper.test",
+      customerName: "Buyer One",
+      cart: [{ productId: "last-stock-poster", quantity: 1 }],
+    });
+
+    expect(() =>
+      createOrder({
+        customerEmail: "two@receiptripper.test",
+        customerName: "Buyer Two",
+        cart: [{ productId: "last-stock-poster", quantity: 1 }],
+      }),
+    ).toThrow(InsufficientInventoryError);
+  });
+
+  it("can seed an inventory double-sell bug", () => {
+    resetStore({ BUG_INVENTORY_DOUBLE_SELLS: true });
+    const first = createOrder({
+      customerEmail: "one@receiptripper.test",
+      customerName: "Buyer One",
+      cart: [{ productId: "last-stock-poster", quantity: 1 }],
+    });
+    const second = createOrder({
+      customerEmail: "two@receiptripper.test",
+      customerName: "Buyer Two",
+      cart: [{ productId: "last-stock-poster", quantity: 1 }],
+    });
+
+    expect(first.id).not.toBe(second.id);
   });
 });

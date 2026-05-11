@@ -1,11 +1,11 @@
 {
-  "runId": "tr_1778463104186",
+  "runId": "tr_1778484390030",
   "orderId": "rr_20260511_001",
   "mode": "honest",
   "scenario": "honest-coupon",
   "decision": "SHIP",
   "truthScore": 100,
-  "checkedAt": "2026-05-11T01:31:44.186Z",
+  "checkedAt": "2026-05-11T07:26:30.030Z",
   "expected": {
     "subtotal": "2399.00",
     "discount": "479.80",
@@ -13,6 +13,7 @@
     "shipping": "0.00",
     "total": "2264.66"
   },
+  "bugFlags": {},
   "sources": [
     {
       "source": "product",
@@ -153,6 +154,8 @@
   ],
   "mismatches": [],
   "evidence": {
-    "invoiceText": "ReceiptRipper Invoice\nOrder: rr_20260511_001\nCustomer: Ada Lovelace\nEmail: honest-coupon@receiptripper.test\n1 x Monsoon Hoodie (RR-HOODIE-001)\nUnit: ¹1,999.00 Line: ¹1,999.00\n1 x Ledger Mug (RR-MUG-002)\nUnit: ¹400.00 Line: ¹400.00\nReceiptRipper Invoice\nOrder: rr_20260511_001\nCustomer: Ada Lovelace\nEmail: honest-coupon@receiptripper.test\nSubtotal: ¹2,399.00\nDiscount: ¹479.80\nTax: ¹345.46\nShipping: ¹0.00\nTotal: ¹2,264.66\n\n-- 1 of 1 --\n\n"
+    "invoiceText": "ReceiptRipper Invoice\nOrder: rr_20260511_001\nCustomer: Ada Lovelace\nEmail: honest-coupon@receiptripper.test\n1 x Monsoon Hoodie (RR-HOODIE-001)\nUnit: ¹1,999.00 Line: ¹1,999.00\n1 x Ledger Mug (RR-MUG-002)\nUnit: ¹400.00 Line: ¹400.00\nReceiptRipper Invoice\nOrder: rr_20260511_001\nCustomer: Ada Lovelace\nEmail: honest-coupon@receiptripper.test\nSubtotal: ¹2,399.00\nDiscount: ¹479.80\nTax: ¹345.46\nShipping: ¹0.00\nTotal: ¹2,264.66\n\n-- 1 of 1 --\n\n",
+    "screenshot": "reports\\evidence\\honest-coupon.png",
+    "reproCommand": "npx playwright test tests/e2e --grep honest-coupon"
   }
 }

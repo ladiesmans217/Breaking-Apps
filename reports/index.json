@@ -1,0 +1,1005 @@
+{
+  "runId": "truth_1778484435951",
+  "checkedAt": "2026-05-11T07:27:15.951Z",
+  "reports": [
+    {
+      "runId": "tr_1778484428518",
+      "orderId": "rr_20260511_001",
+      "mode": "honest",
+      "scenario": "full-product-cart",
+      "decision": "SHIP",
+      "truthScore": 100,
+      "checkedAt": "2026-05-11T07:27:08.518Z",
+      "expected": {
+        "subtotal": "1999.00",
+        "discount": "0.00",
+        "tax": "359.82",
+        "shipping": "99.00",
+        "total": "2457.82"
+      },
+      "bugFlags": {},
+      "sources": [
+        {
+          "source": "product",
+          "label": "Product page",
+          "observed": {
+            "subtotal": "1999.00",
+            "discount": "0.00",
+            "tax": "359.82",
+            "shipping": "99.00",
+            "total": "2457.82"
+          },
+          "fields": [
+            "subtotal"
+          ]
+        },
+        {
+          "source": "cart",
+          "label": "Cart",
+          "observed": {
+            "subtotal": "1999.00",
+            "discount": "0.00",
+            "tax": "359.82",
+            "shipping": "99.00",
+            "total": "2457.82"
+          },
+          "fields": [
+            "subtotal",
+            "discount",
+            "tax",
+            "shipping",
+            "total"
+          ]
+        },
+        {
+          "source": "checkout",
+          "label": "Checkout",
+          "observed": {
+            "subtotal": "1999.00",
+            "discount": "0.00",
+            "tax": "359.82",
+            "shipping": "99.00",
+            "total": "2457.82"
+          },
+          "fields": [
+            "subtotal",
+            "discount",
+            "tax",
+            "shipping",
+            "total"
+          ]
+        },
+        {
+          "source": "confirmation",
+          "label": "Confirmation page",
+          "observed": {
+            "subtotal": "1999.00",
+            "discount": "0.00",
+            "tax": "359.82",
+            "shipping": "99.00",
+            "total": "2457.82"
+          },
+          "fields": [
+            "total"
+          ]
+        },
+        {
+          "source": "email",
+          "label": "Email receipt",
+          "observed": {
+            "subtotal": "1999.00",
+            "discount": "0.00",
+            "tax": "359.82",
+            "shipping": "99.00",
+            "total": "2457.82"
+          },
+          "fields": [
+            "subtotal",
+            "discount",
+            "tax",
+            "shipping",
+            "total"
+          ]
+        },
+        {
+          "source": "admin",
+          "label": "Admin order",
+          "observed": {
+            "subtotal": "1999.00",
+            "discount": "0.00",
+            "tax": "359.82",
+            "shipping": "99.00",
+            "total": "2457.82"
+          },
+          "fields": [
+            "subtotal",
+            "discount",
+            "tax",
+            "shipping",
+            "total"
+          ]
+        },
+        {
+          "source": "api",
+          "label": "Order API",
+          "observed": {
+            "subtotal": "1999.00",
+            "discount": "0.00",
+            "tax": "359.82",
+            "shipping": "99.00",
+            "total": "2457.82"
+          },
+          "fields": [
+            "subtotal",
+            "discount",
+            "tax",
+            "shipping",
+            "total"
+          ]
+        },
+        {
+          "source": "invoice",
+          "label": "Invoice PDF",
+          "observed": {
+            "subtotal": "1999.00",
+            "discount": "0.00",
+            "tax": "359.82",
+            "shipping": "99.00",
+            "total": "2457.82"
+          },
+          "fields": [
+            "subtotal",
+            "discount",
+            "tax",
+            "shipping",
+            "total"
+          ]
+        }
+      ],
+      "mismatches": [],
+      "evidence": {
+        "invoiceText": "ReceiptRipper Invoice\nOrder: rr_20260511_001\nCustomer: Ada Lovelace\nEmail: full-product-cart@receiptripper.test\nSubtotal: ₹1,999.00\nDiscount: ₹0.00\nTax: ₹359.82\nShipping: ₹99.00\nTotal: ₹2,457.82",
+        "screenshot": "reports\\evidence\\full-product-cart.png",
+        "reproCommand": "npx playwright test tests/e2e --grep full-product-cart"
+      }
+    },
+    {
+      "runId": "tr_1778484430352",
+      "orderId": "rr_20260511_001",
+      "mode": "honest",
+      "scenario": "full-threshold-under",
+      "decision": "SHIP",
+      "truthScore": 100,
+      "checkedAt": "2026-05-11T07:27:10.352Z",
+      "expected": {
+        "subtotal": "1999.99",
+        "discount": "0.00",
+        "tax": "360.00",
+        "shipping": "99.00",
+        "total": "2458.99"
+      },
+      "bugFlags": {},
+      "sources": [
+        {
+          "source": "product",
+          "label": "Product page",
+          "observed": {
+            "subtotal": "1999.99",
+            "discount": "0.00",
+            "tax": "360.00",
+            "shipping": "99.00",
+            "total": "2458.99"
+          },
+          "fields": [
+            "subtotal"
+          ]
+        },
+        {
+          "source": "cart",
+          "label": "Cart",
+          "observed": {
+            "subtotal": "1999.99",
+            "discount": "0.00",
+            "tax": "360.00",
+            "shipping": "99.00",
+            "total": "2458.99"
+          },
+          "fields": [
+            "subtotal",
+            "discount",
+            "tax",
+            "shipping",
+            "total"
+          ]
+        },
+        {
+          "source": "checkout",
+          "label": "Checkout",
+          "observed": {
+            "subtotal": "1999.99",
+            "discount": "0.00",
+            "tax": "360.00",
+            "shipping": "99.00",
+            "total": "2458.99"
+          },
+          "fields": [
+            "subtotal",
+            "discount",
+            "tax",
+            "shipping",
+            "total"
+          ]
+        },
+        {
+          "source": "confirmation",
+          "label": "Confirmation page",
+          "observed": {
+            "subtotal": "1999.99",
+            "discount": "0.00",
+            "tax": "360.00",
+            "shipping": "99.00",
+            "total": "2458.99"
+          },
+          "fields": [
+            "total"
+          ]
+        },
+        {
+          "source": "email",
+          "label": "Email receipt",
+          "observed": {
+            "subtotal": "1999.99",
+            "discount": "0.00",
+            "tax": "360.00",
+            "shipping": "99.00",
+            "total": "2458.99"
+          },
+          "fields": [
+            "subtotal",
+            "discount",
+            "tax",
+            "shipping",
+            "total"
+          ]
+        },
+        {
+          "source": "admin",
+          "label": "Admin order",
+          "observed": {
+            "subtotal": "1999.99",
+            "discount": "0.00",
+            "tax": "360.00",
+            "shipping": "99.00",
+            "total": "2458.99"
+          },
+          "fields": [
+            "subtotal",
+            "discount",
+            "tax",
+            "shipping",
+            "total"
+          ]
+        },
+        {
+          "source": "api",
+          "label": "Order API",
+          "observed": {
+            "subtotal": "1999.99",
+            "discount": "0.00",
+            "tax": "360.00",
+            "shipping": "99.00",
+            "total": "2458.99"
+          },
+          "fields": [
+            "subtotal",
+            "discount",
+            "tax",
+            "shipping",
+            "total"
+          ]
+        },
+        {
+          "source": "invoice",
+          "label": "Invoice PDF",
+          "observed": {
+            "subtotal": "1999.99",
+            "discount": "0.00",
+            "tax": "360.00",
+            "shipping": "99.00",
+            "total": "2458.99"
+          },
+          "fields": [
+            "subtotal",
+            "discount",
+            "tax",
+            "shipping",
+            "total"
+          ]
+        }
+      ],
+      "mismatches": [],
+      "evidence": {
+        "invoiceText": "ReceiptRipper Invoice\nOrder: rr_20260511_001\nCustomer: Ada Lovelace\nEmail: threshold-pack@receiptripper.test\nSubtotal: ₹1,999.99\nDiscount: ₹0.00\nTax: ₹360.00\nShipping: ₹99.00\nTotal: ₹2,458.99",
+        "screenshot": "reports\\evidence\\full-threshold-under.png",
+        "reproCommand": "npx playwright test tests/e2e --grep full-threshold-under"
+      }
+    },
+    {
+      "runId": "tr_1778484431403",
+      "orderId": "rr_20260511_001",
+      "mode": "honest",
+      "scenario": "full-threshold-exact",
+      "decision": "SHIP",
+      "truthScore": 100,
+      "checkedAt": "2026-05-11T07:27:11.403Z",
+      "expected": {
+        "subtotal": "2000.00",
+        "discount": "0.00",
+        "tax": "360.00",
+        "shipping": "0.00",
+        "total": "2360.00"
+      },
+      "bugFlags": {},
+      "sources": [
+        {
+          "source": "product",
+          "label": "Product page",
+          "observed": {
+            "subtotal": "2000.00",
+            "discount": "0.00",
+            "tax": "360.00",
+            "shipping": "0.00",
+            "total": "2360.00"
+          },
+          "fields": [
+            "subtotal"
+          ]
+        },
+        {
+          "source": "cart",
+          "label": "Cart",
+          "observed": {
+            "subtotal": "2000.00",
+            "discount": "0.00",
+            "tax": "360.00",
+            "shipping": "0.00",
+            "total": "2360.00"
+          },
+          "fields": [
+            "subtotal",
+            "discount",
+            "tax",
+            "shipping",
+            "total"
+          ]
+        },
+        {
+          "source": "checkout",
+          "label": "Checkout",
+          "observed": {
+            "subtotal": "2000.00",
+            "discount": "0.00",
+            "tax": "360.00",
+            "shipping": "0.00",
+            "total": "2360.00"
+          },
+          "fields": [
+            "subtotal",
+            "discount",
+            "tax",
+            "shipping",
+            "total"
+          ]
+        },
+        {
+          "source": "confirmation",
+          "label": "Confirmation page",
+          "observed": {
+            "subtotal": "2000.00",
+            "discount": "0.00",
+            "tax": "360.00",
+            "shipping": "0.00",
+            "total": "2360.00"
+          },
+          "fields": [
+            "total"
+          ]
+        },
+        {
+          "source": "email",
+          "label": "Email receipt",
+          "observed": {
+            "subtotal": "2000.00",
+            "discount": "0.00",
+            "tax": "360.00",
+            "shipping": "0.00",
+            "total": "2360.00"
+          },
+          "fields": [
+            "subtotal",
+            "discount",
+            "tax",
+            "shipping",
+            "total"
+          ]
+        },
+        {
+          "source": "admin",
+          "label": "Admin order",
+          "observed": {
+            "subtotal": "2000.00",
+            "discount": "0.00",
+            "tax": "360.00",
+            "shipping": "0.00",
+            "total": "2360.00"
+          },
+          "fields": [
+            "subtotal",
+            "discount",
+            "tax",
+            "shipping",
+            "total"
+          ]
+        },
+        {
+          "source": "api",
+          "label": "Order API",
+          "observed": {
+            "subtotal": "2000.00",
+            "discount": "0.00",
+            "tax": "360.00",
+            "shipping": "0.00",
+            "total": "2360.00"
+          },
+          "fields": [
+            "subtotal",
+            "discount",
+            "tax",
+            "shipping",
+            "total"
+          ]
+        },
+        {
+          "source": "invoice",
+          "label": "Invoice PDF",
+          "observed": {
+            "subtotal": "2000.00",
+            "discount": "0.00",
+            "tax": "360.00",
+            "shipping": "0.00",
+            "total": "2360.00"
+          },
+          "fields": [
+            "subtotal",
+            "discount",
+            "tax",
+            "shipping",
+            "total"
+          ]
+        }
+      ],
+      "mismatches": [],
+      "evidence": {
+        "invoiceText": "ReceiptRipper Invoice\nOrder: rr_20260511_001\nCustomer: Ada Lovelace\nEmail: threshold-edge-pack@receiptripper.test\nSubtotal: ₹2,000.00\nDiscount: ₹0.00\nTax: ₹360.00\nShipping: ₹0.00\nTotal: ₹2,360.00",
+        "screenshot": "reports\\evidence\\full-threshold-exact.png",
+        "reproCommand": "npx playwright test tests/e2e --grep full-threshold-exact"
+      }
+    },
+    {
+      "runId": "tr_1778484432319",
+      "orderId": "rr_20260511_001",
+      "mode": "honest",
+      "scenario": "full-threshold-over",
+      "decision": "SHIP",
+      "truthScore": 100,
+      "checkedAt": "2026-05-11T07:27:12.319Z",
+      "expected": {
+        "subtotal": "2000.01",
+        "discount": "0.00",
+        "tax": "360.00",
+        "shipping": "0.00",
+        "total": "2360.01"
+      },
+      "bugFlags": {},
+      "sources": [
+        {
+          "source": "product",
+          "label": "Product page",
+          "observed": {
+            "subtotal": "2000.01",
+            "discount": "0.00",
+            "tax": "360.00",
+            "shipping": "0.00",
+            "total": "2360.01"
+          },
+          "fields": [
+            "subtotal"
+          ]
+        },
+        {
+          "source": "cart",
+          "label": "Cart",
+          "observed": {
+            "subtotal": "2000.01",
+            "discount": "0.00",
+            "tax": "360.00",
+            "shipping": "0.00",
+            "total": "2360.01"
+          },
+          "fields": [
+            "subtotal",
+            "discount",
+            "tax",
+            "shipping",
+            "total"
+          ]
+        },
+        {
+          "source": "checkout",
+          "label": "Checkout",
+          "observed": {
+            "subtotal": "2000.01",
+            "discount": "0.00",
+            "tax": "360.00",
+            "shipping": "0.00",
+            "total": "2360.01"
+          },
+          "fields": [
+            "subtotal",
+            "discount",
+            "tax",
+            "shipping",
+            "total"
+          ]
+        },
+        {
+          "source": "confirmation",
+          "label": "Confirmation page",
+          "observed": {
+            "subtotal": "2000.01",
+            "discount": "0.00",
+            "tax": "360.00",
+            "shipping": "0.00",
+            "total": "2360.01"
+          },
+          "fields": [
+            "total"
+          ]
+        },
+        {
+          "source": "email",
+          "label": "Email receipt",
+          "observed": {
+            "subtotal": "2000.01",
+            "discount": "0.00",
+            "tax": "360.00",
+            "shipping": "0.00",
+            "total": "2360.01"
+          },
+          "fields": [
+            "subtotal",
+            "discount",
+            "tax",
+            "shipping",
+            "total"
+          ]
+        },
+        {
+          "source": "admin",
+          "label": "Admin order",
+          "observed": {
+            "subtotal": "2000.01",
+            "discount": "0.00",
+            "tax": "360.00",
+            "shipping": "0.00",
+            "total": "2360.01"
+          },
+          "fields": [
+            "subtotal",
+            "discount",
+            "tax",
+            "shipping",
+            "total"
+          ]
+        },
+        {
+          "source": "api",
+          "label": "Order API",
+          "observed": {
+            "subtotal": "2000.01",
+            "discount": "0.00",
+            "tax": "360.00",
+            "shipping": "0.00",
+            "total": "2360.01"
+          },
+          "fields": [
+            "subtotal",
+            "discount",
+            "tax",
+            "shipping",
+            "total"
+          ]
+        },
+        {
+          "source": "invoice",
+          "label": "Invoice PDF",
+          "observed": {
+            "subtotal": "2000.01",
+            "discount": "0.00",
+            "tax": "360.00",
+            "shipping": "0.00",
+            "total": "2360.01"
+          },
+          "fields": [
+            "subtotal",
+            "discount",
+            "tax",
+            "shipping",
+            "total"
+          ]
+        }
+      ],
+      "mismatches": [],
+      "evidence": {
+        "invoiceText": "ReceiptRipper Invoice\nOrder: rr_20260511_001\nCustomer: Ada Lovelace\nEmail: free-ship-pack@receiptripper.test\nSubtotal: ₹2,000.01\nDiscount: ₹0.00\nTax: ₹360.00\nShipping: ₹0.00\nTotal: ₹2,360.01",
+        "screenshot": "reports\\evidence\\full-threshold-over.png",
+        "reproCommand": "npx playwright test tests/e2e --grep full-threshold-over"
+      }
+    },
+    {
+      "runId": "tr_1778484435585",
+      "orderId": "rr_20260511_001",
+      "mode": "honest",
+      "scenario": "full-locale",
+      "decision": "SHIP",
+      "truthScore": 100,
+      "checkedAt": "2026-05-11T07:27:15.585Z",
+      "expected": {
+        "subtotal": "1234.56",
+        "discount": "0.00",
+        "tax": "222.22",
+        "shipping": "99.00",
+        "total": "1555.78"
+      },
+      "bugFlags": {},
+      "sources": [
+        {
+          "source": "product",
+          "label": "Product page",
+          "observed": {
+            "subtotal": "1234.56",
+            "discount": "0.00",
+            "tax": "222.22",
+            "shipping": "99.00",
+            "total": "1555.78"
+          },
+          "fields": [
+            "subtotal"
+          ]
+        },
+        {
+          "source": "cart",
+          "label": "Cart",
+          "observed": {
+            "subtotal": "1234.56",
+            "discount": "0.00",
+            "tax": "222.22",
+            "shipping": "99.00",
+            "total": "1555.78"
+          },
+          "fields": [
+            "subtotal",
+            "discount",
+            "tax",
+            "shipping",
+            "total"
+          ]
+        },
+        {
+          "source": "checkout",
+          "label": "Checkout",
+          "observed": {
+            "subtotal": "1234.56",
+            "discount": "0.00",
+            "tax": "222.22",
+            "shipping": "99.00",
+            "total": "1555.78"
+          },
+          "fields": [
+            "subtotal",
+            "discount",
+            "tax",
+            "shipping",
+            "total"
+          ]
+        },
+        {
+          "source": "confirmation",
+          "label": "Confirmation page",
+          "observed": {
+            "subtotal": "1234.56",
+            "discount": "0.00",
+            "tax": "222.22",
+            "shipping": "99.00",
+            "total": "1555.78"
+          },
+          "fields": [
+            "total"
+          ]
+        },
+        {
+          "source": "email",
+          "label": "Email receipt",
+          "observed": {
+            "subtotal": "1234.56",
+            "discount": "0.00",
+            "tax": "222.22",
+            "shipping": "99.00",
+            "total": "1555.78"
+          },
+          "fields": [
+            "subtotal",
+            "discount",
+            "tax",
+            "shipping",
+            "total"
+          ]
+        },
+        {
+          "source": "admin",
+          "label": "Admin order",
+          "observed": {
+            "subtotal": "1234.56",
+            "discount": "0.00",
+            "tax": "222.22",
+            "shipping": "99.00",
+            "total": "1555.78"
+          },
+          "fields": [
+            "subtotal",
+            "discount",
+            "tax",
+            "shipping",
+            "total"
+          ]
+        },
+        {
+          "source": "api",
+          "label": "Order API",
+          "observed": {
+            "subtotal": "1234.56",
+            "discount": "0.00",
+            "tax": "222.22",
+            "shipping": "99.00",
+            "total": "1555.78"
+          },
+          "fields": [
+            "subtotal",
+            "discount",
+            "tax",
+            "shipping",
+            "total"
+          ]
+        },
+        {
+          "source": "invoice",
+          "label": "Invoice PDF",
+          "observed": {
+            "subtotal": "1234.56",
+            "discount": "0.00",
+            "tax": "222.22",
+            "shipping": "99.00",
+            "total": "1555.78"
+          },
+          "fields": [
+            "subtotal",
+            "discount",
+            "tax",
+            "shipping",
+            "total"
+          ]
+        }
+      ],
+      "mismatches": [],
+      "evidence": {
+        "invoiceText": "ReceiptRipper Invoice\nOrder: rr_20260511_001\nCustomer: Ada Lovelace\nEmail: locale-honest@receiptripper.test\nSubtotal: ₹1,234.56\nDiscount: ₹0.00\nTax: ₹222.22\nShipping: ₹99.00\nTotal: ₹1,555.78",
+        "screenshot": "reports\\evidence\\full-locale.png",
+        "reproCommand": "npx playwright test tests/e2e --grep full-locale",
+        "localeChecks": [
+          {
+            "locale": "en-IN",
+            "formatted": "₹1,234.56",
+            "parsed": "1234.56",
+            "expected": "1234.56"
+          },
+          {
+            "locale": "en-US",
+            "formatted": "₹1,234.56",
+            "parsed": "1234.56",
+            "expected": "1234.56"
+          },
+          {
+            "locale": "en-GB",
+            "formatted": "₹1,234.56",
+            "parsed": "1234.56",
+            "expected": "1234.56"
+          },
+          {
+            "locale": "de-DE",
+            "formatted": "1.234,56 ₹",
+            "parsed": "1234.56",
+            "expected": "1234.56"
+          },
+          {
+            "locale": "fr-FR",
+            "formatted": "1 234,56 ₹",
+            "parsed": "1234.56",
+            "expected": "1234.56"
+          }
+        ]
+      }
+    },
+    {
+      "runId": "tr_1778484435889",
+      "orderId": "rr_20260511_001",
+      "mode": "honest",
+      "scenario": "full-inventory-race",
+      "decision": "SHIP",
+      "truthScore": 100,
+      "checkedAt": "2026-05-11T07:27:15.889Z",
+      "expected": {
+        "subtotal": "999.00",
+        "discount": "0.00",
+        "tax": "179.82",
+        "shipping": "99.00",
+        "total": "1277.82"
+      },
+      "bugFlags": {},
+      "sources": [
+        {
+          "source": "product",
+          "label": "Product page",
+          "observed": {
+            "subtotal": "999.00",
+            "discount": "0.00",
+            "tax": "179.82",
+            "shipping": "99.00",
+            "total": "1277.82"
+          },
+          "fields": [
+            "subtotal"
+          ]
+        },
+        {
+          "source": "cart",
+          "label": "Cart",
+          "observed": {
+            "subtotal": "999.00",
+            "discount": "0.00",
+            "tax": "179.82",
+            "shipping": "99.00",
+            "total": "1277.82"
+          },
+          "fields": [
+            "subtotal",
+            "discount",
+            "tax",
+            "shipping",
+            "total"
+          ]
+        },
+        {
+          "source": "checkout",
+          "label": "Checkout",
+          "observed": {
+            "subtotal": "999.00",
+            "discount": "0.00",
+            "tax": "179.82",
+            "shipping": "99.00",
+            "total": "1277.82"
+          },
+          "fields": [
+            "subtotal",
+            "discount",
+            "tax",
+            "shipping",
+            "total"
+          ]
+        },
+        {
+          "source": "confirmation",
+          "label": "Confirmation page",
+          "observed": {
+            "subtotal": "999.00",
+            "discount": "0.00",
+            "tax": "179.82",
+            "shipping": "99.00",
+            "total": "1277.82"
+          },
+          "fields": [
+            "total"
+          ]
+        },
+        {
+          "source": "email",
+          "label": "Email receipt",
+          "observed": {
+            "subtotal": "999.00",
+            "discount": "0.00",
+            "tax": "179.82",
+            "shipping": "99.00",
+            "total": "1277.82"
+          },
+          "fields": [
+            "subtotal",
+            "discount",
+            "tax",
+            "shipping",
+            "total"
+          ]
+        },
+        {
+          "source": "admin",
+          "label": "Admin order",
+          "observed": {
+            "subtotal": "999.00",
+            "discount": "0.00",
+            "tax": "179.82",
+            "shipping": "99.00",
+            "total": "1277.82"
+          },
+          "fields": [
+            "subtotal",
+            "discount",
+            "tax",
+            "shipping",
+            "total"
+          ]
+        },
+        {
+          "source": "api",
+          "label": "Order API",
+          "observed": {
+            "subtotal": "999.00",
+            "discount": "0.00",
+            "tax": "179.82",
+            "shipping": "99.00",
+            "total": "1277.82"
+          },
+          "fields": [
+            "subtotal",
+            "discount",
+            "tax",
+            "shipping",
+            "total"
+          ]
+        },
+        {
+          "source": "invoice",
+          "label": "Invoice PDF",
+          "observed": {
+            "subtotal": "999.00",
+            "discount": "0.00",
+            "tax": "179.82",
+            "shipping": "99.00",
+            "total": "1277.82"
+          },
+          "fields": [
+            "subtotal",
+            "discount",
+            "tax",
+            "shipping",
+            "total"
+          ]
+        }
+      ],
+      "mismatches": [],
+      "evidence": {
+        "invoiceText": "ReceiptRipper Invoice\nOrder: rr_20260511_001\nCustomer: Race Buyer\nEmail: race-one@receiptripper.test\nSubtotal: ₹999.00\nDiscount: ₹0.00\nTax: ₹179.82\nShipping: ₹99.00\nTotal: ₹1,277.82",
+        "reproCommand": "npx playwright test tests/e2e --grep full-inventory-race"
+      }
+    }
+  ],
+  "decision": "SHIP",
+  "truthScore": 100
+}

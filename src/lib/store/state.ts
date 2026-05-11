@@ -1,15 +1,17 @@
-import { sendEmail, clearEmails } from "@/lib/email/inbox";
+import { clearEmails, sendEmail } from "@/lib/email/inbox";
 import { applyBugFlags } from "@/lib/truth/bugs";
 import { formatINR } from "@/lib/truth/money";
 import { buildOrderLines, computeTruth } from "@/lib/truth/oracle";
 import type {
   BugFlags,
   CartLineInput,
+  CheckoutDraft,
   ClaimSource,
   MoneyBreakdown,
   Order,
   Product,
   TruthReport,
+  TruthRun,
 } from "@/lib/truth/types";
 
 export const PRODUCTS: Product[] = [
@@ -68,22 +70,52 @@ export const PRODUCTS: Product[] = [
     badge: "Threshold",
   },
   {
+    id: "threshold-edge-pack",
+    name: "Threshold Edge Pack",
+    description: "Exactly at the free shipping threshold: ₹2,000.00.",
+    sku: "RR-EDGE-007",
+    price: "2000.00",
+    inventory: 6,
+    badge: "Threshold",
+  },
+  {
     id: "free-ship-pack",
     name: "Free Ship Pack",
     description: "Exactly over free shipping at ₹2,000.01.",
-    sku: "RR-FREESHIP-007",
+    sku: "RR-FREESHIP-008",
     price: "2000.01",
     inventory: 6,
     badge: "Threshold",
+  },
+  {
+    id: "last-stock-poster",
+    name: "Last Stock Poster",
+    description: "Only one exists, used for the inventory race test.",
+    sku: "RR-LAST-009",
+    price: "999.00",
+    inventory: 1,
+    badge: "Race",
+  },
+  {
+    id: "locale-ledger",
+    name: "Locale Ledger",
+    description: "₹1,234.56 item used to catch locale decimal parsing mistakes.",
+    sku: "RR-LOCALE-010",
+    price: "1234.56",
+    inventory: 8,
+    badge: "Locale",
   },
 ];
 
 type StoreState = {
   products: Product[];
+  checkouts: Record<string, CheckoutDraft>;
   orders: Record<string, Order>;
   flags: BugFlags;
   lastReport?: TruthReport;
+  lastRun?: TruthRun;
   sequence: number;
+  checkoutSequence: number;
 };
 
 declare global {
@@ -92,10 +124,12 @@ declare global {
 
 function initialState(): StoreState {
   return {
-    products: PRODUCTS,
+    products: PRODUCTS.map((product) => ({ ...product })),
+    checkouts: {},
     orders: {},
     flags: {},
     sequence: 0,
+    checkoutSequence: 0,
   };
 }
 
@@ -117,8 +151,18 @@ export function setLastReport(report: TruthReport): void {
   getStore().lastReport = report;
 }
 
+export function setLastRun(run: TruthRun): void {
+  const store = getStore();
+  store.lastRun = run;
+  store.lastReport = run.reports.at(-1);
+}
+
 export function getLastReport(): TruthReport | undefined {
   return getStore().lastReport;
+}
+
+export function getLastRun(): TruthRun | undefined {
+  return getStore().lastRun;
 }
 
 export function getProducts(): Product[] {
@@ -127,6 +171,10 @@ export function getProducts(): Product[] {
 
 export function getOrder(id: string): Order | undefined {
   return getStore().orders[id];
+}
+
+export function getCheckout(id: string): CheckoutDraft | undefined {
+  return getStore().checkouts[id];
 }
 
 export function listOrders(): Order[] {
@@ -168,20 +216,103 @@ function receiptText(order: Order): string {
   ].join("\n");
 }
 
+function nextOrderId(store: StoreState): string {
+  return `rr_${new Date().toISOString().slice(0, 10).replaceAll("-", "")}_${String(++store.sequence).padStart(3, "0")}`;
+}
+
+function nextCheckoutId(store: StoreState): string {
+  return `co_${new Date().toISOString().slice(0, 10).replaceAll("-", "")}_${String(++store.checkoutSequence).padStart(3, "0")}`;
+}
+
+export class InsufficientInventoryError extends Error {
+  constructor(
+    public readonly productId: string,
+    public readonly requested: number,
+    public readonly available: number,
+  ) {
+    super(`Insufficient inventory for ${productId}: requested ${requested}, available ${available}`);
+  }
+}
+
+function assertAndReserveInventory(store: StoreState, cart: CartLineInput[]): void {
+  for (const item of cart) {
+    const product = store.products.find((candidate) => candidate.id === item.productId);
+    if (!product) {
+      throw new Error(`Unknown product: ${item.productId}`);
+    }
+    if (!store.flags.BUG_INVENTORY_DOUBLE_SELLS && product.inventory < item.quantity) {
+      throw new InsufficientInventoryError(product.id, item.quantity, product.inventory);
+    }
+  }
+
+  if (store.flags.BUG_INVENTORY_DOUBLE_SELLS) {
+    return;
+  }
+
+  for (const item of cart) {
+    const product = store.products.find((candidate) => candidate.id === item.productId);
+    if (product) {
+      product.inventory -= item.quantity;
+    }
+  }
+}
+
+function cartFromLines(checkout: CheckoutDraft): CartLineInput[] {
+  return checkout.lines.map((line) => ({ productId: line.productId, quantity: line.quantity }));
+}
+
+export function createCheckout(input: {
+  cart: CartLineInput[];
+  customerEmail: string;
+  customerName: string;
+  locale?: string;
+  couponCode?: string;
+}): CheckoutDraft {
+  const store = getStore();
+  const lines = buildOrderLines(store.products, input.cart);
+  const expected = computeTruth(lines, input.couponCode);
+  const allClaims = buildClaims(expected, store.flags, input.couponCode);
+  const id = nextCheckoutId(store);
+  const checkout: CheckoutDraft = {
+    id,
+    customerEmail: input.customerEmail,
+    customerName: input.customerName,
+    locale: input.locale || "en-IN",
+    couponCode: input.couponCode?.trim().toUpperCase() || undefined,
+    lines,
+    expected,
+    claims: {
+      product: allClaims.product,
+      cart: allClaims.cart,
+      checkout: allClaims.checkout,
+    },
+    bugFlags: { ...store.flags },
+    createdAt: new Date().toISOString(),
+  };
+
+  store.checkouts[id] = checkout;
+  return checkout;
+}
+
 export function createOrder(input: {
   cart: CartLineInput[];
   customerEmail: string;
   customerName: string;
+  locale?: string;
   couponCode?: string;
+  checkoutId?: string;
 }): Order {
   const store = getStore();
+  assertAndReserveInventory(store, input.cart);
   const lines = buildOrderLines(store.products, input.cart);
   const expected = computeTruth(lines, input.couponCode);
-  const id = `rr_${new Date().toISOString().slice(0, 10).replaceAll("-", "")}_${String(++store.sequence).padStart(3, "0")}`;
+  const id = nextOrderId(store);
   const order: Order = {
     id,
+    checkoutId: input.checkoutId,
     customerEmail: input.customerEmail,
     customerName: input.customerName,
+    locale: input.locale || "en-IN",
     couponCode: input.couponCode?.trim().toUpperCase() || undefined,
     lines,
     expected,
@@ -200,4 +331,20 @@ export function createOrder(input: {
   });
 
   return order;
+}
+
+export function placeCheckoutOrder(checkoutId: string): Order {
+  const checkout = getCheckout(checkoutId);
+  if (!checkout) {
+    throw new Error(`Unknown checkout: ${checkoutId}`);
+  }
+
+  return createOrder({
+    checkoutId: checkout.id,
+    cart: cartFromLines(checkout),
+    customerEmail: checkout.customerEmail,
+    customerName: checkout.customerName,
+    locale: checkout.locale,
+    couponCode: checkout.couponCode,
+  });
 }

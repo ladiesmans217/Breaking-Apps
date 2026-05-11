@@ -14,7 +14,12 @@
     "test:passmark": "playwright test tests/e2e --grep @passmark",
     "truth:honest": "playwright test tests/e2e --grep @honest",
     "truth:mutants": "playwright test tests/e2e --grep @mutant",
+    "truth:full": "playwright test tests/e2e --grep @full",
     "test": "npm run test:unit && npm run test:passmark && npm run truth:honest && npm run truth:mutants",
+    "test:full": "npm run test:unit && npm run test:passmark && npm run truth:honest && npm run truth:mutants && npm run truth:full",
+    "redis:start": "docker compose up -d redis",
+    "redis:stop": "docker compose down",
+    "redis:ping": "docker compose exec redis redis-cli ping",
     "report": "playwright show-report"
   },
   "dependencies": {

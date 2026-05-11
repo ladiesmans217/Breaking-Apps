@@ -26,7 +26,8 @@ body {
 }
 
 button,
-input {
+input,
+select {
   font: inherit;
 }
 
@@ -196,11 +197,24 @@ a {
   font-size: 12px;
 }
 
-.field input {
+.field input,
+.field select {
   border: 1px solid var(--line);
   border-radius: 7px;
   min-height: 42px;
   padding: 0 12px;
+}
+
+.error {
+  color: var(--red);
+  font-weight: 700;
+}
+
+.split-heading {
+  align-items: center;
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
 }
 
 .totals {

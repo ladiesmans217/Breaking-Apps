@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ReceiptRipper Aggregate Truth Run</title>
+  <style>
+    body { font-family: Inter, Arial, sans-serif; margin: 40px; color: #121212; }
+    .decision { font-size: 48px; font-weight: 900; margin: 0; }
+    .bad { color: #b91c1c; }
+    .good { color: #047857; }
+    table { border-collapse: collapse; width: 100%; margin-top: 24px; }
+    th, td { border-bottom: 1px solid #ddd; padding: 10px; text-align: left; }
+    th { background: #f3f4f6; }
+  </style>
+</head>
+<body>
+  <p>RECEIPTRIPPER AGGREGATE TRUTH RUN</p>
+  <h1 class="decision good">SHIP</h1>
+  <p>Truth score: 100% · Run: truth_1778484435951 · Reports: 6</p>
+  <table>
+    <thead><tr><th>Scenario</th><th>Decision</th><th>Score</th><th>Mismatches</th><th>Bug flags</th></tr></thead>
+    <tbody>
+        <tr>
+          <td>full-product-cart</td>
+          <td class="good">SHIP</td>
+          <td>100%</td>
+          <td>0</td>
+          <td>None</td>
+        </tr>
+        <tr>
+          <td>full-threshold-under</td>
+          <td class="good">SHIP</td>
+          <td>100%</td>
+          <td>0</td>
+          <td>None</td>
+        </tr>
+        <tr>
+          <td>full-threshold-exact</td>
+          <td class="good">SHIP</td>
+          <td>100%</td>
+          <td>0</td>
+          <td>None</td>
+        </tr>
+        <tr>
+          <td>full-threshold-over</td>
+          <td class="good">SHIP</td>
+          <td>100%</td>
+          <td>0</td>
+          <td>None</td>
+        </tr>
+        <tr>
+          <td>full-locale</td>
+          <td class="good">SHIP</td>
+          <td>100%</td>
+          <td>0</td>
+          <td>None</td>
+        </tr>
+        <tr>
+          <td>full-inventory-race</td>
+          <td class="good">SHIP</td>
+          <td>100%</td>
+          <td>0</td>
+          <td>None</td>
+        </tr></tbody>
+  </table>
+</body>
+</html>

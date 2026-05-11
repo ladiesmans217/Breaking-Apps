@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { buildOrderLines, computeTruth } from "../../src/lib/truth/oracle";
 import { PRODUCTS } from "../../src/lib/store/state";
+import { formatINRForLocale, parseLocalizedMoneyWithFlags, SUPPORTED_LOCALES } from "../../src/lib/truth/money";
 
 describe("money oracle", () => {
   it("computes coupon, tax, shipping, and total with Decimal math", () => {
@@ -36,9 +37,23 @@ describe("money oracle", () => {
 
   it("honors the free-shipping threshold at exactly ₹2,000.00", () => {
     const under = computeTruth(buildOrderLines(PRODUCTS, [{ productId: "threshold-pack", quantity: 1 }]));
+    const edge = computeTruth(buildOrderLines(PRODUCTS, [{ productId: "threshold-edge-pack", quantity: 1 }]));
     const over = computeTruth(buildOrderLines(PRODUCTS, [{ productId: "free-ship-pack", quantity: 1 }]));
 
     expect(under.shipping).toBe("99.00");
+    expect(edge.shipping).toBe("0.00");
     expect(over.shipping).toBe("0.00");
+  });
+
+  it("round-trips formatted INR values across supported locales", () => {
+    for (const locale of SUPPORTED_LOCALES) {
+      const formatted = formatINRForLocale("1234.56", locale);
+      expect(parseLocalizedMoneyWithFlags(formatted, locale)).toBe("1234.56");
+    }
+  });
+
+  it("can expose a German decimal parsing drift", () => {
+    const formatted = formatINRForLocale("1234.56", "de-DE");
+    expect(parseLocalizedMoneyWithFlags(formatted, "de-DE", true)).not.toBe("1234.56");
   });
 });

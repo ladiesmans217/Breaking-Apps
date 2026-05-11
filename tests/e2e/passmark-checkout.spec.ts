@@ -11,7 +11,7 @@ test("Passmark shops the store and the money oracle approves it @passmark", asyn
     customerEmail: "passmark-shopper@receiptripper.test",
   });
 
-  const report = await buildReport(request, orderId, "passmark-checkout", "honest");
+  const report = await buildReport(request, orderId, "passmark-checkout", "honest", {}, page);
 
   expect(report.decision).toBe("SHIP");
   expect(report.truthScore).toBe(100);

@@ -1,11 +1,12 @@
 import Link from "next/link";
-import { getLastReport } from "@/lib/store/state";
+import { getLastReport, getLastRun } from "@/lib/store/state";
 import { formatINR } from "@/lib/truth/money";
 
 export default function TruthPage() {
+  const run = getLastRun();
   const report = getLastReport();
 
-  if (!report) {
+  if (!report && !run) {
     return (
       <main className="page">
         <Link className="button ghost" href="/">
@@ -17,6 +18,51 @@ export default function TruthPage() {
         </section>
       </main>
     );
+  }
+
+  if (run) {
+    return (
+      <main className="page">
+        <Link className="button ghost" href="/">
+          Back to store
+        </Link>
+        <section className="report-box">
+          <p className="muted">RECEIPTRIPPER AGGREGATE TRUTH RUN</p>
+          <h1 className={`decision ${run.decision === "SHIP" ? "ship" : "stop"}`}>{run.decision}</h1>
+          <p>
+            Truth score: <strong>{run.truthScore}%</strong> · Reports: <strong>{run.reports.length}</strong>
+          </p>
+        </section>
+
+        <section className="report-box">
+          <h2>Scenario scoreboard</h2>
+          <table aria-label="Aggregate truth reports">
+            <thead>
+              <tr>
+                <th>Scenario</th>
+                <th>Decision</th>
+                <th>Score</th>
+                <th>Mismatches</th>
+              </tr>
+            </thead>
+            <tbody>
+              {run.reports.map((runReport) => (
+                <tr key={runReport.scenario}>
+                  <td>{runReport.scenario}</td>
+                  <td>{runReport.decision}</td>
+                  <td>{runReport.truthScore}%</td>
+                  <td>{runReport.mismatches.length}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </section>
+      </main>
+    );
+  }
+
+  if (!report) {
+    return null;
   }
 
   return (

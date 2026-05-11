@@ -1,31 +1,29 @@
 {
-  "runId": "tr_1778484411948",
+  "runId": "tr_1778484432319",
   "orderId": "rr_20260511_001",
-  "mode": "mutant",
-  "scenario": "mutant-email",
-  "decision": "DO NOT SHIP",
-  "truthScore": 97,
-  "checkedAt": "2026-05-11T07:26:51.948Z",
+  "mode": "honest",
+  "scenario": "full-threshold-over",
+  "decision": "SHIP",
+  "truthScore": 100,
+  "checkedAt": "2026-05-11T07:27:12.319Z",
   "expected": {
-    "subtotal": "2399.00",
-    "discount": "479.80",
-    "tax": "345.46",
+    "subtotal": "2000.01",
+    "discount": "0.00",
+    "tax": "360.00",
     "shipping": "0.00",
-    "total": "2264.66"
+    "total": "2360.01"
   },
-  "bugFlags": {
-    "BUG_EMAIL_TOTAL_WRONG": true
-  },
+  "bugFlags": {},
   "sources": [
     {
       "source": "product",
       "label": "Product page",
       "observed": {
-        "subtotal": "2399.00",
-        "discount": "479.80",
-        "tax": "345.46",
+        "subtotal": "2000.01",
+        "discount": "0.00",
+        "tax": "360.00",
         "shipping": "0.00",
-        "total": "2264.66"
+        "total": "2360.01"
       },
       "fields": [
         "subtotal"
@@ -35,11 +33,11 @@
       "source": "cart",
       "label": "Cart",
       "observed": {
-        "subtotal": "2399.00",
-        "discount": "479.80",
-        "tax": "345.46",
+        "subtotal": "2000.01",
+        "discount": "0.00",
+        "tax": "360.00",
         "shipping": "0.00",
-        "total": "2264.66"
+        "total": "2360.01"
       },
       "fields": [
         "subtotal",
@@ -53,11 +51,11 @@
       "source": "checkout",
       "label": "Checkout",
       "observed": {
-        "subtotal": "2399.00",
-        "discount": "479.80",
-        "tax": "345.46",
+        "subtotal": "2000.01",
+        "discount": "0.00",
+        "tax": "360.00",
         "shipping": "0.00",
-        "total": "2264.66"
+        "total": "2360.01"
       },
       "fields": [
         "subtotal",
@@ -71,11 +69,11 @@
       "source": "confirmation",
       "label": "Confirmation page",
       "observed": {
-        "subtotal": "2399.00",
-        "discount": "479.80",
-        "tax": "345.46",
+        "subtotal": "2000.01",
+        "discount": "0.00",
+        "tax": "360.00",
         "shipping": "0.00",
-        "total": "2264.66"
+        "total": "2360.01"
       },
       "fields": [
         "total"
@@ -85,11 +83,11 @@
       "source": "email",
       "label": "Email receipt",
       "observed": {
-        "subtotal": "2399.00",
-        "discount": "479.80",
-        "tax": "345.46",
+        "subtotal": "2000.01",
+        "discount": "0.00",
+        "tax": "360.00",
         "shipping": "0.00",
-        "total": "2399.00"
+        "total": "2360.01"
       },
       "fields": [
         "subtotal",
@@ -103,11 +101,11 @@
       "source": "admin",
       "label": "Admin order",
       "observed": {
-        "subtotal": "2399.00",
-        "discount": "479.80",
-        "tax": "345.46",
+        "subtotal": "2000.01",
+        "discount": "0.00",
+        "tax": "360.00",
         "shipping": "0.00",
-        "total": "2264.66"
+        "total": "2360.01"
       },
       "fields": [
         "subtotal",
@@ -121,11 +119,11 @@
       "source": "api",
       "label": "Order API",
       "observed": {
-        "subtotal": "2399.00",
-        "discount": "479.80",
-        "tax": "345.46",
+        "subtotal": "2000.01",
+        "discount": "0.00",
+        "tax": "360.00",
         "shipping": "0.00",
-        "total": "2264.66"
+        "total": "2360.01"
       },
       "fields": [
         "subtotal",
@@ -139,11 +137,11 @@
       "source": "invoice",
       "label": "Invoice PDF",
       "observed": {
-        "subtotal": "2399.00",
-        "discount": "479.80",
-        "tax": "345.46",
+        "subtotal": "2000.01",
+        "discount": "0.00",
+        "tax": "360.00",
         "shipping": "0.00",
-        "total": "2264.66"
+        "total": "2360.01"
       },
       "fields": [
         "subtotal",
@@ -154,18 +152,10 @@
       ]
     }
   ],
-  "mismatches": [
-    {
-      "source": "email",
-      "label": "Email receipt",
-      "field": "total",
-      "expected": "2264.66",
-      "observed": "2399.00"
-    }
-  ],
+  "mismatches": [],
   "evidence": {
-    "invoiceText": "ReceiptRipper Invoice\nOrder: rr_20260511_001\nCustomer: Ada Lovelace\nEmail: mutant-email@receiptripper.test\nSubtotal: ₹2,399.00\nDiscount: ₹479.80\nTax: ₹345.46\nShipping: ₹0.00\nTotal: ₹2,264.66",
-    "screenshot": "reports\\evidence\\mutant-email.png",
-    "reproCommand": "npx playwright test tests/e2e --grep mutant-email"
+    "invoiceText": "ReceiptRipper Invoice\nOrder: rr_20260511_001\nCustomer: Ada Lovelace\nEmail: free-ship-pack@receiptripper.test\nSubtotal: ₹2,000.01\nDiscount: ₹0.00\nTax: ₹360.00\nShipping: ₹0.00\nTotal: ₹2,360.01",
+    "screenshot": "reports\\evidence\\full-threshold-over.png",
+    "reproCommand": "npx playwright test tests/e2e --grep full-threshold-over"
   }
 }

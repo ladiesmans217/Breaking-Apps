@@ -1,17 +1,20 @@
 {
-  "runId": "tr_1778463118344",
+  "runId": "tr_1778484402961",
   "orderId": "rr_20260511_001",
   "mode": "mutant",
   "scenario": "mutant-tax-rounding",
   "decision": "DO NOT SHIP",
   "truthScore": 94,
-  "checkedAt": "2026-05-11T01:31:58.344Z",
+  "checkedAt": "2026-05-11T07:26:42.961Z",
   "expected": {
     "subtotal": "1149.95",
     "discount": "0.00",
     "tax": "206.99",
     "shipping": "99.00",
     "total": "1455.94"
+  },
+  "bugFlags": {
+    "BUG_TAX_ROUNDING_DRIFT": true
   },
   "sources": [
     {
@@ -168,6 +171,8 @@
     }
   ],
   "evidence": {
-    "invoiceText": "ReceiptRipper Invoice\nOrder: rr_20260511_001\nCustomer: Ada Lovelace\nEmail: mutant-rounding@receiptripper.test\nSubtotal: ₹1,149.95\nDiscount: ₹0.00\nTax: ₹206.99\nShipping: ₹99.00\nTotal: ₹1,455.94"
+    "invoiceText": "ReceiptRipper Invoice\nOrder: rr_20260511_001\nCustomer: Ada Lovelace\nEmail: mutant-rounding@receiptripper.test\nSubtotal: ₹1,149.95\nDiscount: ₹0.00\nTax: ₹206.99\nShipping: ₹99.00\nTotal: ₹1,455.94",
+    "screenshot": "reports\\evidence\\mutant-tax-rounding.png",
+    "reproCommand": "npx playwright test tests/e2e --grep mutant-tax-rounding"
   }
 }

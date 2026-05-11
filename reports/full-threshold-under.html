@@ -16,88 +16,88 @@
 </head>
 <body>
   <p>RECEIPTRIPPER TRUTH REPORT</p>
-  <h1 class="decision bad">DO NOT SHIP</h1>
-  <p>Truth score: 94% · Order: rr_20260511_001 · Scenario: mutant-tax-rounding</p>
-  <p>Bug flags: <code>BUG_TAX_ROUNDING_DRIFT</code></p>
+  <h1 class="decision good">SHIP</h1>
+  <p>Truth score: 100% · Order: rr_20260511_001 · Scenario: full-threshold-under</p>
+  <p>Bug flags: None</p>
   <table>
     <thead><tr><th>Source</th><th>Subtotal</th><th>Discount</th><th>Tax</th><th>Shipping</th><th>Total</th></tr></thead>
     <tbody>
         <tr>
           <td>Product page</td>
-          <td>₹1,149.95</td>
+          <td>₹1,999.99</td>
           <td>₹0.00</td>
-          <td>₹206.99</td>
+          <td>₹360.00</td>
           <td>₹99.00</td>
-          <td>₹1,455.94</td>
+          <td>₹2,458.99</td>
         </tr>
         <tr>
           <td>Cart</td>
-          <td>₹1,149.95</td>
+          <td>₹1,999.99</td>
           <td>₹0.00</td>
-          <td>₹206.99</td>
+          <td>₹360.00</td>
           <td>₹99.00</td>
-          <td>₹1,455.94</td>
+          <td>₹2,458.99</td>
         </tr>
         <tr>
           <td>Checkout</td>
-          <td>₹1,149.95</td>
+          <td>₹1,999.99</td>
           <td>₹0.00</td>
-          <td>₹207.00</td>
+          <td>₹360.00</td>
           <td>₹99.00</td>
-          <td>₹1,455.95</td>
+          <td>₹2,458.99</td>
         </tr>
         <tr>
           <td>Confirmation page</td>
-          <td>₹1,149.95</td>
+          <td>₹1,999.99</td>
           <td>₹0.00</td>
-          <td>₹206.99</td>
+          <td>₹360.00</td>
           <td>₹99.00</td>
-          <td>₹1,455.94</td>
+          <td>₹2,458.99</td>
         </tr>
         <tr>
           <td>Email receipt</td>
-          <td>₹1,149.95</td>
+          <td>₹1,999.99</td>
           <td>₹0.00</td>
-          <td>₹206.99</td>
+          <td>₹360.00</td>
           <td>₹99.00</td>
-          <td>₹1,455.94</td>
+          <td>₹2,458.99</td>
         </tr>
         <tr>
           <td>Admin order</td>
-          <td>₹1,149.95</td>
+          <td>₹1,999.99</td>
           <td>₹0.00</td>
-          <td>₹206.99</td>
+          <td>₹360.00</td>
           <td>₹99.00</td>
-          <td>₹1,455.94</td>
+          <td>₹2,458.99</td>
         </tr>
         <tr>
           <td>Order API</td>
-          <td>₹1,149.95</td>
+          <td>₹1,999.99</td>
           <td>₹0.00</td>
-          <td>₹206.99</td>
+          <td>₹360.00</td>
           <td>₹99.00</td>
-          <td>₹1,455.94</td>
+          <td>₹2,458.99</td>
         </tr>
         <tr>
           <td>Invoice PDF</td>
-          <td>₹1,149.95</td>
+          <td>₹1,999.99</td>
           <td>₹0.00</td>
-          <td>₹206.99</td>
+          <td>₹360.00</td>
           <td>₹99.00</td>
-          <td>₹1,455.94</td>
+          <td>₹2,458.99</td>
         </tr></tbody>
   </table>
   <h2>Mismatches</h2>
-  <ul><li>Checkout tax: expected ₹206.99, observed ₹207.00</li><li>Checkout total: expected ₹1,455.94, observed ₹1,455.95</li></ul>
+  <ul><li>None</li></ul>
   <h2>Evidence</h2>
   <ul><li><strong>invoiceText</strong>: ReceiptRipper Invoice
 Order: rr_20260511_001
 Customer: Ada Lovelace
-Email: mutant-rounding@receiptripper.test
-Subtotal: ₹1,149.95
+Email: threshold-pack@receiptripper.test
+Subtotal: ₹1,999.99
 Discount: ₹0.00
-Tax: ₹206.99
+Tax: ₹360.00
 Shipping: ₹99.00
-Total: ₹1,455.94</li><li><strong>screenshot</strong>: reports\evidence\mutant-tax-rounding.png</li><li><strong>reproCommand</strong>: npx playwright test tests/e2e --grep mutant-tax-rounding</li></ul>
+Total: ₹2,458.99</li><li><strong>screenshot</strong>: reports\evidence\full-threshold-under.png</li><li><strong>reproCommand</strong>: npx playwright test tests/e2e --grep full-threshold-under</li></ul>
 </body>
 </html>
