@@ -39,7 +39,7 @@ If they disagree, the report says:
 DO NOT SHIP
 ```
 
-![ReceiptRipper aggregate truth report](https://raw.githubusercontent.com/ladiesmans217/Breaking-Apps/main/article-assets/full-aggregate-report.png)
+![ReceiptRipper mutant invoice and admin report](https://raw.githubusercontent.com/ladiesmans217/Breaking-Apps/main/article-assets/mutant-invoice-admin-report.png)
 
 ## The Short Version
 
@@ -49,15 +49,25 @@ It is a domain-specific truth test:
 
 > A store must not tell different money stories in different places.
 
-The final local run passed:
+The final local verification passed:
 
 ```txt
-Vitest unit tests: 12 passed
-Real Passmark checkout test: 1 passed
-Honest truth run: 1 passed
-Mutant truth run: 7 passed
-Full original truth run: 5 passed
+Unit tests: 12 passed
+Passmark-powered browser journey: 1 passed
+Honest truth scenario: 1 passed
+Mutant truth scenarios: 7 passed
+Full truth Playwright tests: 5 passed
+Full truth report rows: 6 generated
+Production build: passed
 Redis-backed test:full run: passed
+```
+
+The counts are different on purpose:
+
+```txt
+8 truth domains are covered across multiple layers.
+7 mutant scenarios catch 8 seeded bug flags because invoice/admin/API truth catches two flags in one run.
+5 full Playwright tests generate 6 report rows because the threshold test writes under/exact/over reports.
 ```
 
 The full gauntlet covers:
@@ -130,7 +140,7 @@ A shallow test would probably pass because checkout completed.
 
 ReceiptRipper fails the run because the store told three different money stories.
 
-![ReceiptRipper mutant invoice and admin report](https://raw.githubusercontent.com/ladiesmans217/Breaking-Apps/main/article-assets/mutant-invoice-admin-report.png)
+![ReceiptRipper aggregate truth report](https://raw.githubusercontent.com/ladiesmans217/Breaking-Apps/main/article-assets/full-aggregate-report.png)
 
 That is why this project is not about “AI clicked buttons.”
 
@@ -142,23 +152,34 @@ The architecture has four layers:
 
 | Layer | Responsibility |
 | --- | --- |
-| Passmark | Acts like the shopper through natural-language browser steps |
-| Playwright | Runs the browser, captures screenshots/videos/traces, downloads invoices, calls APIs |
+| Passmark | Drives the human checkout journey in plain English and extracts receipt email content |
+| Playwright | Captures evidence, downloads invoices, calls APIs, and coordinates the inventory race |
 | Decimal oracle | Computes the expected subtotal, discount, tax, shipping, and total |
 | Truth Report | Turns mismatches into JSON/HTML evidence and a `SHIP` or `DO NOT SHIP` decision |
 
 The important design choice is that AI never becomes the judge of correctness.
 
-Passmark is excellent at this:
+Passmark owns the human-facing journey. This is the actual checkout flow:
 
-```txt
-Click the Add button for Monsoon Hoodie
-Click the Add button for Ledger Mug
-Fill the Coupon input with SAVE20
-Fill the Email input
-Click Checkout
-Click Place order
-Verify the confirmation page shows an order total
+```ts
+await runSteps({
+  page,
+  userFlow: "ReceiptRipper checkout truth flow",
+  steps: [
+    { description: "Click the Add button for Monsoon Hoodie" },
+    { description: "Click the Add button for Ledger Mug" },
+    { description: "Fill the Coupon input", data: { value: "SAVE20" } },
+    { description: "Fill the Name input", data: { value: "Ada Lovelace" } },
+    { description: "Fill the Email input", data: { value: "passmark-shopper@receiptripper.test" } },
+    { description: "Click the Checkout button" },
+    { description: "Click the Place order button" },
+  ],
+  assertions: [
+    { assertion: "The order confirmation page is visible and shows an order total." },
+  ],
+  test,
+  expect,
+});
 ```
 
 But after checkout exists, the model steps aside.
@@ -421,15 +442,16 @@ Final result:
 
 ```txt
 Unit tests: 12 passed
-Real Passmark checkout: 1 passed
-Honest truth run: 1 passed
-Mutant truth run: 7 passed
-Full original truth run: 5 passed
+Passmark-powered browser journey: 1 passed
+Honest truth scenario: 1 passed
+Mutant truth scenarios: 7 passed
+Full truth Playwright tests: 5 passed
+Full truth report rows: 6 generated
+Production build: passed
+Redis-backed full run: passed
 ```
 
-The first Redis-backed run hit a transient DNS failure to `openrouter.ai`, so I reran it. The rerun passed.
-
-That matters because the failure was not a product bug. The product and Redis setup were fine. The retry proved the actual suite.
+Because the Passmark journey depends on OpenRouter, I kept the deterministic truth checks separate from the AI-gateway-dependent flow. That makes the evidence loop repeatable while still proving the sponsor tool can drive the actual checkout journey.
 
 ## What I Learned
 
